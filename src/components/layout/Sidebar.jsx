@@ -1,22 +1,34 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../hooks/useAuth.jsx'
+import {
+  SquaresFour,
+  QrCode,
+  ClipboardText,
+  Chalkboard,
+  Users,
+  Books,
+  Printer,
+  ShieldCheck,
+  Heart,
+  Gear,
+} from '@phosphor-icons/react'
 
 const NAV_ITEMS = [
   { section: 'main' },
-  { icon: '▣', labelKey: 'nav.dashboard', path: '/' },
-  { icon: '◎', labelKey: 'nav.scan', path: '/scan' },
-  { icon: '☰', labelKey: 'nav.records', path: '/records', badge: true },
+  { Icon: SquaresFour,  labelKey: 'nav.dashboard', path: '/' },
+  { Icon: QrCode,       labelKey: 'nav.scan',      path: '/scan' },
+  { Icon: ClipboardText,labelKey: 'nav.records',   path: '/records', badge: true },
   { section: 'management' },
-  { icon: '◫', labelKey: 'nav.classes', path: '/classes' },
-  { icon: '◉', labelKey: 'nav.students', path: '/students' },
-  { icon: '◈', labelKey: 'nav.books', path: '/books' },
-  { icon: '⊟', labelKey: 'nav.printQR', path: '/qr-print' },
+  { Icon: Chalkboard,   labelKey: 'nav.classes',   path: '/classes' },
+  { Icon: Users,        labelKey: 'nav.students',  path: '/students' },
+  { Icon: Books,        labelKey: 'nav.books',     path: '/books' },
+  { Icon: Printer,      labelKey: 'nav.printQR',   path: '/qr-print' },
   { section: 'info' },
-  { icon: '🔒', labelKey: 'nav.privacy', path: '/settings/privacy' },
-  { icon: '♥', labelKey: 'nav.donate', path: '/settings/donate' },
+  { Icon: ShieldCheck,  labelKey: 'nav.privacy',   path: '/settings/privacy' },
+  { Icon: Heart,        labelKey: 'nav.donate',    path: '/settings/donate' },
   { section: 'account' },
-  { icon: '◇', labelKey: 'nav.settings', path: '/settings' },
+  { Icon: Gear,         labelKey: 'nav.settings',  path: '/settings' },
 ]
 
 export default function Sidebar({ open, collapsed = false, onClose, incompleteCount = 0 }) {
@@ -70,7 +82,9 @@ export default function Sidebar({ open, collapsed = false, onClose, incompleteCo
                 onClick={() => handleNav(item.path)}
                 title={collapsed ? t(item.labelKey) : undefined}
               >
-                <span className="nav-icon">{item.icon}</span>
+                <span className="nav-icon">
+                  <item.Icon size={18} weight={isActive ? 'fill' : 'regular'} />
+                </span>
                 {!collapsed && (
                   <>
                     <span className="nav-label">{t(item.labelKey)}</span>
