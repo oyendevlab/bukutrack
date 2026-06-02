@@ -30,7 +30,7 @@ export default function Layout({ title, breadcrumb, actions, children, incomplet
         onClose={() => setSidebarOpen(false)}
         incompleteCount={incompleteCount}
       />
-      <div className={`main${sidebarCollapsed ? ' sidebar-hidden' : ''}`}>
+      <div className={`main${sidebarCollapsed ? ' sidebar-icon-mode' : ''}`}>
         <Topbar
           title={title}
           breadcrumb={breadcrumb}

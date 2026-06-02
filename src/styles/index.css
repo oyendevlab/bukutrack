@@ -192,10 +192,10 @@ body {
 .sidebar.open { transform: translateX(0); }
 
 @media (min-width: 1024px) {
-  .sidebar { transform: translateX(0); }
-  /* Hamburger boleh collapse sidebar di desktop */
-  .sidebar.force-collapsed { transform: translateX(-100%); }
-  .main.sidebar-hidden { margin-left: 0; }
+  .sidebar { transform: translateX(0); transition: width 0.25s cubic-bezier(0.4,0,0.2,1), transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+  /* Icon-only mode */
+  .sidebar.sidebar-collapsed { width: 64px; }
+  .main.sidebar-icon-mode { margin-left: 64px; }
 }
 
 .sidebar-overlay {
@@ -212,18 +212,50 @@ body {
   .sidebar-overlay.show { display: none !important; }
 }
 
-.logo { padding: 24px 24px 20px; border-bottom: 1px solid var(--sidebar-border); }
-.logo-mark { font-family: var(--font-heading); font-size: 28px; color: var(--sidebar-text-active); letter-spacing: 3px; line-height: 1; }
+.logo { padding: 20px 20px 16px; border-bottom: 1px solid var(--sidebar-border); }
+.logo-mark { font-family: var(--font-heading); font-size: 26px; color: var(--sidebar-text-active); letter-spacing: 3px; line-height: 1; }
 .logo-mark span { color: var(--accent); }
-.logo-sub { font-size: 9px; color: var(--sidebar-section); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 4px; }
 
-.nav { flex: 1; padding: 16px 0; overflow-y: auto; }
-.nav-section { padding: 14px 24px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; color: var(--sidebar-section); text-transform: uppercase; }
-.nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 24px; font-size: 13px; font-weight: 600; color: var(--sidebar-text); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; letter-spacing: 0.3px; }
-.nav-item:hover { color: var(--sidebar-text-active); background: rgba(100,140,200,0.08); }
-.nav-item.active { color: var(--sidebar-text-active); border-left-color: var(--accent); background: var(--sidebar-active-bg); font-weight: 700; }
-.nav-icon { font-size: 14px; width: 20px; text-align: center; }
-.nav-badge { margin-left: auto; background: var(--red); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; font-family: var(--font-mono); border-radius: 3px; }
+.nav { flex: 1; padding: 10px 0; overflow-y: auto; }
+
+/* Section headers — subtle & compact */
+.nav-section {
+  padding: 12px 20px 4px;
+  font-size: 8.5px; font-weight: 700; letter-spacing: 1.8px;
+  color: var(--sidebar-section); text-transform: uppercase;
+  opacity: 0.7;
+}
+.nav-section-collapsed {
+  padding: 8px 0;
+  margin: 0 12px;
+  border-top: 1px solid var(--sidebar-border);
+}
+
+/* Nav items — pill style */
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; margin: 1px 8px;
+  font-size: 12.5px; font-weight: 600; color: var(--sidebar-text);
+  cursor: pointer; transition: all 0.15s;
+  border-radius: 8px; border-left: none;
+  letter-spacing: 0.2px;
+}
+.nav-item:hover {
+  color: var(--sidebar-text-active);
+  background: var(--sidebar-active-bg);
+}
+.nav-item.active {
+  color: var(--sidebar-text-active);
+  background: var(--sidebar-active-bg);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.nav-icon { font-size: 15px; width: 22px; text-align: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-badge { margin-left: auto; background: var(--red); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; font-family: var(--font-mono); border-radius: 10px; }
+/* Dot badge untuk icon-only mode */
+.nav-badge-dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; position: absolute; top: 6px; right: 6px; }
 
 .sidebar-footer { padding: 16px 24px; border-top: 1px solid var(--sidebar-border); }
 .user-row { display: flex; align-items: center; gap: 10px; }

@@ -32,23 +32,31 @@ export default function Sidebar({ open, collapsed = false, onClose, incompleteCo
 
   function getInitials(name) {
     if (!name) return '?'
-    return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
+    return name.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase()
   }
 
   return (
     <>
       {open && <div className="sidebar-overlay show" onClick={onClose} />}
 
-      <aside className={`sidebar${open ? ' open' : ''}${collapsed ? ' force-collapsed' : ''}`}>
+      <aside className={`sidebar${open ? ' open' : ''}${collapsed ? ' sidebar-collapsed' : ''}`}>
+
+        {/* Logo — sembunyikan subtitle, icon-only mode tunjuk "BT" */}
         <div className="logo">
-          <div className="logo-mark">BUKU<span>TRACK</span></div>
-          <div className="logo-sub">v1.0 · Cikgu Portal</div>
+          <div className="logo-mark">
+            {collapsed ? <span>BT</span> : <>BUKU<span>TRACK</span></>}
+          </div>
         </div>
 
         <nav className="nav">
           {NAV_ITEMS.map((item, i) => {
             if (item.section) {
-              return <div key={i} className="nav-section">{t(`nav.${item.section}`)}</div>
+              // Section header — sembunyikan text bila collapsed, tunjuk divider
+              return (
+                <div key={i} className={`nav-section${collapsed ? ' nav-section-collapsed' : ''}`}>
+                  {!collapsed && t(`nav.${item.section}`)}
+                </div>
+              )
             }
 
             const isActive = item.path === '/'
@@ -60,24 +68,37 @@ export default function Sidebar({ open, collapsed = false, onClose, incompleteCo
                 key={item.path}
                 className={`nav-item${isActive ? ' active' : ''}`}
                 onClick={() => handleNav(item.path)}
+                title={collapsed ? t(item.labelKey) : undefined}
               >
                 <span className="nav-icon">{item.icon}</span>
-                {t(item.labelKey)}
-                {item.badge && incompleteCount > 0 && (
-                  <span className="nav-badge">{incompleteCount}</span>
+                {!collapsed && (
+                  <>
+                    <span className="nav-label">{t(item.labelKey)}</span>
+                    {item.badge && incompleteCount > 0 && (
+                      <span className="nav-badge">{incompleteCount}</span>
+                    )}
+                  </>
+                )}
+                {collapsed && item.badge && incompleteCount > 0 && (
+                  <span className="nav-badge-dot" />
                 )}
               </div>
             )
           })}
         </nav>
 
+        {/* Footer — compact bila collapsed */}
         <div className="sidebar-footer">
-          <div className="user-row">
-            <div className="user-avatar">{getInitials(teacher?.name)}</div>
-            <div>
-              <div className="user-name">{teacher?.name || 'Cikgu'}</div>
-              <div className="user-role">{teacher?.school_name || 'BukuTrack'}</div>
+          <div className={`user-row${collapsed ? ' user-row-collapsed' : ''}`}>
+            <div className="user-avatar" title={collapsed ? (teacher?.name || 'Cikgu') : undefined}>
+              {getInitials(teacher?.name)}
             </div>
+            {!collapsed && (
+              <div>
+                <div className="user-name">{teacher?.name || 'Cikgu'}</div>
+                <div className="user-role">{teacher?.school_name || 'BukuTrack'}</div>
+              </div>
+            )}
           </div>
         </div>
       </aside>
