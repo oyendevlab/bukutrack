@@ -1,0 +1,58 @@
+/* ===== STYLE THEMES (5 estetik) ===== */
+/* Dikawal oleh data-style pada <html> */
+/* Mengawal: font-family, border-radius, border-weight */
+
+[data-style="minimal"] {
+  --font-heading: 'Bebas Neue', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-card: 8px;
+  --radius-btn: 6px;
+  --radius-input: 6px;
+  --radius-modal: 12px;
+  --border-weight: 1px;
+}
+
+[data-style="sage"] {
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Lato', sans-serif;
+  --font-mono: 'Lato', monospace;
+  --radius-card: 12px;
+  --radius-btn: 8px;
+  --radius-input: 8px;
+  --radius-modal: 16px;
+  --border-weight: 1px;
+}
+
+[data-style="bubbly"] {
+  --font-heading: 'Nunito', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+  --font-mono: 'Nunito', sans-serif;
+  --radius-card: 16px;
+  --radius-btn: 20px;
+  --radius-input: 12px;
+  --radius-modal: 20px;
+  --border-weight: 2px;
+}
+
+[data-style="sunset"] {
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'Outfit', monospace;
+  --radius-card: 10px;
+  --radius-btn: 8px;
+  --radius-input: 8px;
+  --radius-modal: 14px;
+  --border-weight: 1px;
+}
+
+[data-style="ocean"] {
+  --font-heading: 'DM Sans', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Sans', monospace;
+  --radius-card: 6px;
+  --radius-btn: 4px;
+  --radius-input: 4px;
+  --radius-modal: 8px;
+  --border-weight: 1px;
+}

@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="ms" data-theme="blue">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BukuTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Background & surfaces */
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #edf1f7;
+    --surface3: #dde5f0;
+
+    /* Typography */
+    --ink: #2c3a52;
+    --ink2: #6b7fa3;
+    --ink3: #a8b8d0;
+    --rule: #d8e2f0;
+
+    /* Sidebar */
+    --sidebar-bg: #e2eaf4;
+    --sidebar-border: #cdd8ec;
+    --sidebar-text: #7a96b8;
+    --sidebar-text-active: #3a5480;
+    --sidebar-active-bg: rgba(100,140,200,0.12);
+    --sidebar-section: #a8bcd8;
+
+    /* Accent colours — pastel */
+    --accent: #6b8fd4;
+    --accent-bg: rgba(107,143,212,0.1);
+
+    --red: #c0607a;
+    --red-bg: rgba(192,96,122,0.08);
+
+    --green: #4a9470;
+    --green-bg: rgba(74,148,112,0.09);
+
+    --amber: #b07840;
+    --amber-bg: rgba(176,120,64,0.09);
+
+    --sidebar-w: 240px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
+
+
+  /* ===================== THEME CARD ===================== */
+  .theme-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+  .theme-card.selected { border-color: var(--accent) !important; box-shadow: 0 0 0 3px var(--accent-bg), 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
+  .theme-card.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; font-size: 12px; font-weight: 800; color: var(--accent); }
+  .theme-card { position: relative; }
+
+  /* ===================== THEMES ===================== */
+
+  /* Theme 1: Powder Blue (default) */
+  [data-theme="blue"] {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #edf1f7;
+    --surface3: #dde5f0;
+    --ink: #2c3a52;
+    --ink2: #6b7fa3;
+    --ink3: #a8b8d0;
+    --rule: #d8e2f0;
+    --sidebar-bg: #e2eaf4;
+    --sidebar-border: #cdd8ec;
+    --sidebar-text: #7a96b8;
+    --sidebar-text-active: #3a5480;
+    --sidebar-active-bg: rgba(100,140,200,0.12);
+    --sidebar-section: #a8bcd8;
+    --accent: #6b8fd4;
+    --accent-bg: rgba(107,143,212,0.1);
+    --red: #c0607a;
+    --red-bg: rgba(192,96,122,0.08);
+    --green: #4a9470;
+    --green-bg: rgba(74,148,112,0.09);
+    --amber: #b07840;
+    --amber-bg: rgba(176,120,64,0.09);
+    --login-bg: linear-gradient(135deg, #dce8f5 0%, #e8e2f5 50%, #ddf0ea 100%);
+  }
+
+  /* Theme 2: Sage Green */
+  [data-theme="sage"] {
+    --bg: #f0f5f0;
+    --surface: #ffffff;
+    --surface2: #eaf2ea;
+    --surface3: #d8ebd8;
+    --ink: #2a3c2a;
+    --ink2: #5a7a5a;
+    --ink3: #9ab89a;
+    --rule: #cce0cc;
+    --sidebar-bg: #deeede;
+    --sidebar-border: #c4dcc4;
+    --sidebar-text: #6a9a6a;
+    --sidebar-text-active: #2e5c2e;
+    --sidebar-active-bg: rgba(80,160,80,0.1);
+    --sidebar-section: #8ab88a;
+    --accent: #5a9460;
+    --accent-bg: rgba(90,148,96,0.1);
+    --red: #b86060;
+    --red-bg: rgba(184,96,96,0.08);
+    --green: #3a8c50;
+    --green-bg: rgba(58,140,80,0.09);
+    --amber: #9a7830;
+    --amber-bg: rgba(154,120,48,0.09);
+    --login-bg: linear-gradient(135deg, #d8efd8 0%, #e8f5d0 50%, #d0eae0 100%);
+  }
+
+  /* Theme 3: Lavender */
+  [data-theme="lavender"] {
+    --bg: #f2f0f8;
+    --surface: #ffffff;
+    --surface2: #eeebf8;
+    --surface3: #e0daf0;
+    --ink: #3a2c52;
+    --ink2: #7a6aa0;
+    --ink3: #b0a0c8;
+    --rule: #d8d0ec;
+    --sidebar-bg: #e8e4f4;
+    --sidebar-border: #d4cce8;
+    --sidebar-text: #9080bc;
+    --sidebar-text-active: #4a3480;
+    --sidebar-active-bg: rgba(140,100,210,0.1);
+    --sidebar-section: #b0a0cc;
+    --accent: #8060c0;
+    --accent-bg: rgba(128,96,192,0.1);
+    --red: #c06080;
+    --red-bg: rgba(192,96,128,0.08);
+    --green: #508070;
+    --green-bg: rgba(80,128,112,0.09);
+    --amber: #a07840;
+    --amber-bg: rgba(160,120,64,0.09);
+    --login-bg: linear-gradient(135deg, #e0d8f8 0%, #f0d8f0 50%, #d8e0f8 100%);
+  }
+
+  /* Theme 4: Dusty Rose */
+  [data-theme="rose"] {
+    --bg: #f8f0f2;
+    --surface: #ffffff;
+    --surface2: #f5eaed;
+    --surface3: #edd8de;
+    --ink: #4a2830;
+    --ink2: #9a6878;
+    --ink3: #c8a0b0;
+    --rule: #e8d0d8;
+    --sidebar-bg: #f0e0e6;
+    --sidebar-border: #e4ccd4;
+    --sidebar-text: #b88090;
+    --sidebar-text-active: #7a3848;
+    --sidebar-active-bg: rgba(200,100,120,0.1);
+    --sidebar-section: #c8a0b0;
+    --accent: #b86078;
+    --accent-bg: rgba(184,96,120,0.1);
+    --red: #c05060;
+    --red-bg: rgba(192,80,96,0.08);
+    --green: #6a9470;
+    --green-bg: rgba(106,148,112,0.09);
+    --amber: #b08040;
+    --amber-bg: rgba(176,128,64,0.09);
+    --login-bg: linear-gradient(135deg, #f5d8e0 0%, #f8e8d0 50%, #f0d8e8 100%);
+  }
+
+  /* Theme 5: Warm Ivory */
+  [data-theme="ivory"] {
+    --bg: #f8f4ee;
+    --surface: #ffffff;
+    --surface2: #f4ede4;
+    --surface3: #ecddd0;
+    --ink: #3c2e1e;
+    --ink2: #8a7060;
+    --ink3: #c0a888;
+    --rule: #e0d0bc;
+    --sidebar-bg: #f0e6d6;
+    --sidebar-border: #e0d0bc;
+    --sidebar-text: #a89070;
+    --sidebar-text-active: #5c3e20;
+    --sidebar-active-bg: rgba(160,120,70,0.1);
+    --sidebar-section: #c0a880;
+    --accent: #9a7040;
+    --accent-bg: rgba(154,112,64,0.1);
+    --red: #b86050;
+    --red-bg: rgba(184,96,80,0.08);
+    --green: #5a8c58;
+    --green-bg: rgba(90,140,88,0.09);
+    --amber: #a87830;
+    --amber-bg: rgba(168,120,48,0.09);
+    --login-bg: linear-gradient(135deg, #f0e4d0 0%, #f5ead8 50%, #ece0c8 100%);
+  }
+
+  /* ===================== SIDEBAR ===================== */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    left: 0; top: 0;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 4px 0 20px rgba(100,140,200,0.08);
+  }
+
+  .sidebar.open { transform: translateX(0); }
+
+  @media (min-width: 1024px) {
+    .sidebar { transform: translateX(0); }
+    .sidebar.force-collapsed { transform: translateX(-100%); }
+  }
+
+  .logo { padding: 24px 24px 20px; border-bottom: 1px solid var(--sidebar-border); }
+  .logo-mark { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--sidebar-text-active); letter-spacing: 3px; line-height: 1; }
+  .logo-mark span { color: var(--accent); }
+  .logo-sub { font-size: 9px; color: var(--sidebar-section); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 4px; }
+
+  .nav { flex: 1; padding: 16px 0; overflow-y: auto; }
+  .nav-section { padding: 14px 24px 5px; font-size: 9px; font-weight: 700; letter-spacing: 2.5px; color: var(--sidebar-section); text-transform: uppercase; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 24px; font-size: 13px; font-weight: 600; color: var(--sidebar-text); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; letter-spacing: 0.3px; }
+  .nav-item:hover { color: var(--sidebar-text-active); background: rgba(100,140,200,0.08); }
+  .nav-item.active { color: var(--sidebar-text-active); border-left-color: var(--accent); background: var(--sidebar-active-bg); font-weight: 700; }
+  .nav-icon { font-size: 14px; width: 20px; text-align: center; }
+  .nav-badge { margin-left: auto; background: var(--red); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; font-family: 'JetBrains Mono', monospace; border-radius: 3px; }
+
+  .sidebar-footer { padding: 16px 24px; border-top: 1px solid var(--sidebar-border); }
+  .user-row { display: flex; align-items: center; gap: 10px; }
+  .user-avatar { width: 34px; height: 34px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: white; flex-shrink: 0; border-radius: 4px; }
+  .user-name { font-size: 12.5px; font-weight: 700; color: var(--sidebar-text-active); }
+  .user-role { font-size: 10px; color: var(--sidebar-section); margin-top: 2px; }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 199;
+  }
+  .sidebar-overlay.show { display: block; }
+
+  /* ===================== MAIN ===================== */
+  .main {
+    margin-left: 0;
+    min-height: 100vh;
+    transition: margin-left 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  @media (min-width: 1024px) {
+    .main { margin-left: var(--sidebar-w); }
+    .main.sidebar-hidden { margin-left: 0; }
+  }
+
+  /* ===================== TOPBAR ===================== */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 54px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(100,140,200,0.06);
+  }
+
+  @media (min-width: 640px) { .topbar { padding: 0 24px; gap: 14px; } }
+
+  .hamburger {
+    width: 36px; height: 36px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 5px; cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+    border: 2px solid transparent;
+  }
+  .hamburger:hover { border-color: var(--ink); }
+  .ham-line { width: 20px; height: 2px; background: var(--ink); transition: all 0.25s; transform-origin: center; }
+  .hamburger.open .ham-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open .ham-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open .ham-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .topbar-divider { width: 2px; height: 20px; background: var(--rule); flex-shrink: 0; }
+  .topbar-left { flex: 1; min-width: 0; overflow: hidden; }
+  .topbar-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
+  .topbar-breadcrumb { font-size: 10px; color: var(--ink3); font-weight: 500; margin-top: 1px; display: flex; align-items: center; gap: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .breadcrumb-link { cursor: pointer; flex-shrink: 0; }
+  .breadcrumb-link:hover { color: var(--ink); }
+  .breadcrumb-current { color: var(--red); font-weight: 700; flex-shrink: 0; }
+  .topbar-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  /* ===================== BUTTONS ===================== */
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 15px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.3px; }
+  .btn-primary { background: var(--accent); color: #fff; border: 2px solid var(--accent); box-shadow: 0 2px 8px rgba(107,143,212,0.25); }
+  .btn-primary:hover { background: #5a7ec4; border-color: #5a7ec4; box-shadow: 0 4px 12px rgba(107,143,212,0.35); }
+  .btn-ghost { background: var(--surface2); border: 1.5px solid var(--rule); color: var(--ink2); }
+  .btn-ghost:hover { border-color: var(--ink2); color: var(--ink); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--ink2); color: var(--ink2); }
+  .btn-outline:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .btn-red { background: var(--red); color: #fff; border: 1.5px solid var(--red); border-radius: 4px; }
+  .btn-sm { padding: 7px 12px; font-size: 11.5px; }
+  @media (max-width: 480px) { .topbar-actions .btn span { display: none; } }
+
+  /* ===================== CONTENT ===================== */
+  .content { padding: 18px 16px; }
+  @media (min-width: 640px) { .content { padding: 24px 24px; } }
+  @media (min-width: 1024px) { .content { padding: 28px 32px; } }
+
+  /* ===================== ALERT ===================== */
+  .alert { display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; font-weight: 600; border-left: 3px solid; border-radius: 6px; }
+  .alert-warn { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+  .alert-ok { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+
+  /* ===================== OVERVIEW STATS ===================== */
+  .overview-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    border: 1px solid var(--rule);
+    margin-bottom: 20px;
+    background: var(--surface);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(100,140,200,0.06);
+  }
+  @media (min-width: 480px) { .overview-stats { grid-template-columns: repeat(3, 1fr); } }
+
+  .ov-cell { padding: 16px 18px; border-bottom: 1px solid var(--rule); border-right: none; position: relative; }
+  .ov-cell:last-child { border-bottom: none; }
+  @media (min-width: 480px) { .ov-cell { border-right: 1px solid var(--rule); border-bottom: none; } .ov-cell:last-child { border-right: none; } }
+  .ov-cell::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--sc, var(--ink)); }
+  .ov-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .ov-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--ink); line-height: 1; letter-spacing: 1px; }
+  .ov-num.red { color: var(--red); }
+  .ov-num.green { color: var(--green); }
+  .ov-note { font-size: 10px; color: var(--ink3); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ===================== CLASS CARDS ===================== */
+  .class-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  @media (min-width: 640px) { .class-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1200px) { .class-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .class-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(100,140,200,0.07);
+  }
+
+  .class-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--cc, var(--ink));
+    transition: height 0.15s;
+  }
+
+  .class-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(100,140,200,0.18); border-color: var(--accent); }
+  .class-card:hover::before { height: 6px; }
+
+  .cc-head {
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface2);
+  }
+
+  .cc-subject {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1.5px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .cc-year {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink3);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .cc-stats {
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  .cc-stat { text-align: center; }
+  .cc-stat + .cc-stat { border-left: 1px solid var(--rule); }
+  .cc-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 24px; line-height: 1; margin-bottom: 2px; }
+  .cc-stat-label { font-size: 9px; font-weight: 600; color: var(--ink3); letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .cc-progress {
+    padding: 0 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .cc-prog-row { display: flex; flex-direction: column; gap: 4px; }
+  .cc-prog-label { display: flex; justify-content: space-between; font-size: 10px; font-weight: 600; color: var(--ink2); }
+  .cc-prog-count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink3); }
+
+  .prog-bar { height: 5px; background: var(--surface3); overflow: hidden; border-radius: 3px; }
+  .prog-fill { height: 100%; transition: width 0.4s; border-radius: 3px; }
+  .prog-fill.ok { background: var(--green); }
+  .prog-fill.warn { background: var(--amber); }
+  .prog-fill.danger { background: var(--red); }
+  .prog-fill.ink { background: var(--ink); }
+
+  .cc-footer {
+    padding: 10px 18px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+  }
+
+  .cc-footer-text {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--ink2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .cc-arrow { font-size: 14px; color: var(--ink3); transition: all 0.15s; }
+  .class-card:hover .cc-arrow { transform: translateX(4px); color: var(--accent); }
+
+  /* ===================== DETAIL STATS ===================== */
+  .stats-strip { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--rule); margin-bottom: 20px; background: var(--surface); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(100,140,200,0.06); }
+  @media (min-width: 640px) { .stats-strip { grid-template-columns: repeat(4, 1fr); } }
+  .stat-cell::before { background: var(--sc, var(--accent)); }
+  .stat-cell { padding: 14px 16px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); position: relative; }
+  .stat-cell:nth-child(2n) { border-right: none; }
+  .stat-cell:nth-last-child(-n+2) { border-bottom: none; }
+  @media (min-width: 640px) { .stat-cell { padding: 18px 20px; border-bottom: none; } .stat-cell:nth-child(2n) { border-right: 1px solid var(--rule); } .stat-cell:last-child { border-right: none; } }
+  .stat-cell::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--sc, var(--ink)); }
+  .stat-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: var(--ink); line-height: 1; letter-spacing: 1px; }
+  .stat-num.red { color: var(--red); }
+  .stat-num.green { color: var(--green); }
+  .stat-note { font-size: 10px; color: var(--ink3); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ===================== CARD ===================== */
+  .card { background: var(--surface); border: 1px solid var(--rule); margin-bottom: 16px; border-radius: 8px; box-shadow: 0 2px 8px rgba(100,140,200,0.06); }
+  .card-header { padding: 13px 18px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-radius: 8px 8px 0 0; }
+  .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1.2px; color: var(--ink); }
+  .card-body { padding: 18px; }
+
+  /* ===================== TABLE ===================== */
+  .table-wrap { overflow-x: auto; }
+  .table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .table th { text-align: left; padding: 10px 14px; font-size: 9px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid var(--rule); white-space: nowrap; background: var(--surface2); }
+  .table td { padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .table tr:last-child td { border-bottom: none; }
+  .table tr:hover td { background: var(--surface2); }
+
+  .s-name { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .s-init { width: 28px; height: 28px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; border-radius: 50%; }
+
+  .tick { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .tick-yes { background: var(--green-bg); color: var(--green); }
+  .tick-no { background: var(--surface2); color: var(--ink3); }
+
+  .badge { padding: 3px 7px; font-size: 10px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .badge-ok { background: var(--green-bg); color: var(--green); }
+  .badge-partial { background: var(--amber-bg); color: var(--amber); }
+  .badge-none { background: var(--red-bg); color: var(--red); }
+
+  .tag { padding: 2px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border: 1.5px solid; border-radius: 4px; }
+  .tag-ink { border-color: var(--ink2); color: var(--ink2); background: var(--surface2); }
+  .tag-red { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+  .tag-green { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+
+  /* BOOK LIST */
+  .book-row { padding: 13px 18px; border-bottom: 1px solid var(--rule); }
+  .book-row:last-child { border-bottom: none; }
+  .book-row-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .book-row-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+  .book-row-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink3); }
+  .book-row-pct { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-align: right; color: var(--ink3); margin-top: 5px; }
+
+  /* RECENT */
+  .recent-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 12.5px; }
+  .recent-item:last-child { border-bottom: none; }
+  .recent-dot { width: 6px; height: 6px; flex-shrink: 0; }
+  .recent-name { flex: 1; font-weight: 600; }
+  .recent-time { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--ink3); }
+
+  /* GRID */
+  .grid-3-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 900px) { .grid-3-1 { grid-template-columns: 2fr 1fr; } }
+  .settings-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 768px) { .settings-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* FILTER */
+  .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .filter-chip { padding: 6px 12px; font-size: 11px; font-weight: 700; border: 1.5px solid var(--rule); cursor: pointer; transition: all 0.15s; color: var(--ink2); background: var(--surface); font-family: 'Plus Jakarta Sans', sans-serif; border-radius: 20px; }
+  .filter-chip:hover, .filter-chip.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+  .filter-input { padding: 6px 12px; font-size: 11.5px; border: 1.5px solid var(--rule); background: var(--surface); font-family: 'Plus Jakarta Sans', sans-serif; outline: none; color: var(--ink); border-radius: 6px; }
+  .filter-input:focus { border-color: var(--accent); outline: none; }
+  .export-group { display: flex; gap: 6px; margin-left: auto; }
+  .export-btn { padding: 6px 12px; font-size: 11px; font-weight: 700; border: 1.5px solid var(--rule); background: var(--surface); cursor: pointer; color: var(--ink2); font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.15s; border-radius: 6px; }
+  .export-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TABS */
+  .tabs { display: flex; border-bottom: 1px solid var(--rule); margin-bottom: 18px; }
+  .tab { padding: 10px 18px; font-size: 11.5px; font-weight: 700; color: var(--ink3); cursor: pointer; border: none; background: none; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.5px; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; text-transform: uppercase; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+
+  /* INPUTS */
+  .input-label { display: block; font-size: 9px; font-weight: 700; color: var(--ink3); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+  .input { width: 100%; background: var(--surface); border: 1.5px solid var(--rule); padding: 10px 12px; color: var(--ink); font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; transition: border-color 0.15s; margin-bottom: 13px; border-radius: 6px; }
+  .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(107,143,212,0.12); }
+  .input::placeholder { color: var(--ink3); }
+
+  .list-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--rule); margin-bottom: 4px; border-radius: 6px; transition: all 0.15s; }
+  .list-row:hover { border-color: var(--accent); background: var(--accent-bg); }
+  .list-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink3); width: 20px; }
+  .list-name { font-size: 12.5px; font-weight: 600; flex: 1; }
+  .icon-btn { width: 26px; height: 26px; background: var(--surface); border: 1px solid var(--rule); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--ink2); transition: all 0.15s; }
+  .icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .icon-btn.del:hover { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+
+  /* QR */
+  .qr-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  .qr-card { border: 1px solid var(--rule); padding: 16px; text-align: center; background: var(--surface); border-radius: 8px; transition: all 0.15s; }
+  .qr-card:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(100,140,200,0.1); }
+  .qr-placeholder { width: 80px; height: 80px; background: var(--surface2); border: 1px solid var(--rule); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 26px; opacity: 0.2; }
+  .qr-sname { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .qr-sid { font-size: 9.5px; color: var(--ink3); font-family: 'JetBrains Mono', monospace; margin-top: 3px; }
+
+  /* SCAN */
+  .scan-center { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
+  .scan-box { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 36px; text-align: center; max-width: 380px; width: 100%; box-shadow: 0 4px 20px rgba(100,140,200,0.1); }
+  .qr-frame { width: 200px; height: 200px; border: 2px dashed var(--rule); border-radius: 12px; margin: 0 auto 28px; display: flex; align-items: center; justify-content: center; position: relative; background: var(--surface2); }
+  .qr-corner { position: absolute; width: 18px; height: 18px; border-color: var(--accent); border-style: solid; border-width: 0; }
+  .qr-corner.tl { top:6px;left:6px;border-top-width:3px;border-left-width:3px; }
+  .qr-corner.tr { top:6px;right:6px;border-top-width:3px;border-right-width:3px; }
+  .qr-corner.bl { bottom:6px;left:6px;border-bottom-width:3px;border-left-width:3px; }
+  .qr-corner.br { bottom:6px;right:6px;border-bottom-width:3px;border-right-width:3px; }
+  .qr-scan-line { position: absolute; left:0;right:0;height:2px;background:var(--accent);border-radius:1px;animation:scanAnim 2s ease-in-out infinite; }
+  @keyframes scanAnim { 0%,100%{top:10%} 50%{top:85%} }
+  .qr-icon { font-size:44px;opacity:0.12; }
+  .scan-title { font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:8px; }
+  .scan-sub { font-size:12.5px;color:var(--ink2);line-height:1.6;margin-bottom:24px; }
+  .rule { height:1px;background:var(--rule);margin:20px 0; }
+  .recent-label { font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px; }
+
+  /* KELAS SELECTOR untuk scan */
+  .kelas-selector { margin-bottom: 20px; }
+  .kelas-selector-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .kelas-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .kelas-pill { padding: 7px 13px; font-size: 12px; font-weight: 700; border: 2px solid var(--rule); cursor: pointer; transition: all 0.15s; color: var(--ink2); background: var(--surface); }
+  .kelas-pill:hover { border-color: var(--ink2); color: var(--ink); }
+  .kelas-pill.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* LOGIN */
+  .login-screen { min-height:100vh;background:var(--login-bg, linear-gradient(135deg, #dce8f5 0%, #e8e2f5 50%, #ddf0ea 100%));display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden; }
+  .login-screen::before { content:'BUKUTRACK';position:absolute;font-family:'Bebas Neue',sans-serif;font-size:160px;color:rgba(100,140,200,0.06);letter-spacing:18px;white-space:nowrap;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none; }
+  .login-card { background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:44px 40px;width:100%;max-width:400px;position:relative;z-index:1;box-shadow:0 8px 40px rgba(100,140,200,0.15); }
+  .login-mark { font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--sidebar-text-active);letter-spacing:4px;background:var(--sidebar-bg);display:inline-block;padding:6px 18px;margin-bottom:26px;border-radius:8px; }
+  .login-mark span { color:var(--accent); }
+  .login-heading { font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.3px;color:var(--ink);margin-bottom:4px; }
+  .login-sub { font-size:12px;color:var(--ink3);margin-bottom:26px; }
+
+  /* MODAL */
+  .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px; }
+  .modal { background:var(--surface);border:2px solid var(--ink);width:100%;max-width:420px;animation:modalIn 0.2s ease; }
+  @keyframes modalIn { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+  .modal-head { background:var(--ink);padding:20px 24px;display:flex;align-items:center;gap:14px; }
+  .modal-init { width:48px;height:48px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0; }
+  .modal-sname { font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:1.5px; }
+  .modal-smeta { font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;font-family:'JetBrains Mono',monospace; }
+  .mprog { display:flex;gap:3px;padding:0 24px 14px;background:var(--sidebar-bg); }
+  .mprog-dot { flex:1;height:3px;background:var(--rule); border-radius:2px; }
+  .mprog-dot.done { background:var(--green); }
+  .modal-body { padding:20px 24px; }
+  .modal-sec { font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px; }
+  .bci { display:flex;align-items:center;gap:12px;padding:11px 14px;border:1.5px solid var(--rule);cursor:pointer;transition:all 0.15s;background:var(--surface2);margin-bottom:6px;border-radius:6px; }
+  .bci:hover { border-color:var(--accent); background:var(--accent-bg); }
+  .bci.checked { border-color:var(--green);background:var(--green-bg); box-shadow: 0 1px 4px rgba(74,148,112,0.1); }
+  .bci-box { width:20px;height:20px;border:2px solid var(--ink3);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;color:transparent;transition:all 0.15s; }
+  .bci.checked .bci-box { background:var(--green);border-color:var(--green);color:#fff; }
+  .bci-name { font-size:13px;font-weight:600;flex:1; }
+  .bci-date { font-size:10px;color:var(--ink3);font-family:'JetBrains Mono',monospace; }
+  .bci.checked .bci-date { color:var(--green); }
+  .bci-date.none { color:var(--red); }
+  .modal-foot { padding:14px 24px;border-top:1px solid var(--rule);display:flex;gap:8px; }
+  .modal-foot .btn { flex:1;justify-content:center; }
+
+  /* PAGES */
+  .page { display:none; }
+  .page.active { display:block;animation:fadeIn 0.2s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-thumb { background:var(--surface3); }
+
+  /* Mini chart */
+  .mini-chart { display:flex;align-items:flex-end;gap:5px;height:52px;margin:14px 0 22px; }
+  .bar-col { flex:1;background:var(--surface3);position:relative;cursor:pointer;transition:background 0.15s; }
+  .bar-col:hover { background:var(--ink); }
+  .bar-col.today { background:var(--red); }
+  .bar-col::after { content:attr(data-label);position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--ink3);font-family:'JetBrains Mono',monospace;white-space:nowrap; }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-mark">BUKU<span>TRACK</span></div>
+    <div class="login-heading">Log Masuk</div>
+    <div class="login-sub">Portal Cikgu · Sistem Rekod Buku</div>
+    <label class="input-label">E-mel</label>
+    <input class="input" type="email" value="cikgu@sekolah.edu.my">
+    <label class="input-label">Kata Laluan</label>
+    <input class="input" type="password" value="••••••••">
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:13px;letter-spacing:1px;" onclick="showApp()">Masuk →</button>
+    <div style="text-align:center;margin-top:14px;font-size:11.5px;color:var(--ink3);">Lupa kata laluan? <span style="color:var(--red);cursor:pointer;font-weight:700;">Reset</span></div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="mainApp" style="display:none;">
+
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-mark">BUKU<span>TRACK</span></div>
+      <div class="logo-sub">v1.0 · Cikgu Portal</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Utama</div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">▣</span> Dashboard</div>
+      <div class="nav-item" onclick="showPage('scan',this)"><span class="nav-icon">◎</span> Scan QR</div>
+      <div class="nav-item" onclick="showPage('rekod',this)"><span class="nav-icon">☰</span> Rekod & Laporan<span class="nav-badge">9</span></div>
+      <div class="nav-section">Pengurusan</div>
+      <div class="nav-item" onclick="showPage('kelas',this)"><span class="nav-icon">◫</span> Senarai Kelas</div>
+      <div class="nav-item" onclick="showPage('murid',this)"><span class="nav-icon">◉</span> Senarai Murid</div>
+      <div class="nav-item" onclick="showPage('buku',this)"><span class="nav-icon">◈</span> Senarai Buku</div>
+      <div class="nav-item" onclick="showPage('qrprint',this)"><span class="nav-icon">⊟</span> Print QR</div>
+      <div class="nav-section">Akaun</div>
+      <div class="nav-item" onclick="showPage('tetapan',this)"><span class="nav-icon">◇</span> Tetapan</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">CZ</div>
+        <div><div class="user-name">Cikgu Zana</div><div class="user-role">3 Kelas · Bahasa Inggeris</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main" id="mainContent">
+
+    <!-- ==================== DASHBOARD (OVERVIEW) ==================== -->
+    <div id="page-dashboard" class="page active">
+      <div class="topbar">
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <div class="ham-line"></div>
+          <div class="ham-line"></div>
+          <div class="ham-line"></div>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-left">
+          <div class="topbar-title">Dashboard</div>
+          <div class="topbar-breadcrumb">Semua Kelas · Selasa, 3 Jun 2025</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost btn-sm">↗ Laporan</button>
+          <button class="btn btn-primary btn-sm" onclick="showPage('scan',null)">◎ Mula Scan</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="alert alert-warn">▲ &nbsp;<strong>9 murid</strong> merentasi 3 kelas masih belum lengkap hantar buku — minggu ini.</div>
+
+        <!-- Overview Stats -->
+        <div class="overview-stats">
+          <div class="ov-cell" style="--sc:var(--ink)">
+            <div class="ov-label">Jumlah Murid</div>
+            <div class="ov-num">105</div>
+            <div class="ov-note">3 kelas aktif</div>
+          </div>
+          <div class="ov-cell" style="--sc:var(--green)">
+            <div class="ov-label">Lengkap Semua Buku</div>
+            <div class="ov-num green">96</div>
+            <div class="ov-note">91.4% keseluruhan</div>
+          </div>
+          <div class="ov-cell" style="--sc:var(--red)">
+            <div class="ov-label">Belum Lengkap</div>
+            <div class="ov-num red">9</div>
+            <div class="ov-note">8.6% perlu tindakan</div>
+          </div>
+        </div>
+
+        <!-- Class Cards -->
+        <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;">Kelas Anda</div>
+        <div class="class-grid">
+
+          <!-- Card 1: English 5A -->
+          <div class="class-card" style="--cc:#1a7a40" onclick="showDetail('5A')">
+            <div class="cc-head">
+              <div class="cc-subject">English</div>
+              <div class="cc-year">Tahun 5A · 35 Murid</div>
+            </div>
+            <div class="cc-stats">
+              <div class="cc-stat">
+                <div class="cc-stat-num" style="color:var(--green)">33</div>
+                <div class="cc-stat-label">Lengkap</div>
+              </div>
+              <div class="cc-stat">
+                <div class="cc-stat-num" style="color:var(--red)">2</div>
+                <div class="cc-stat-label">Belum</div>
+              </div>
+              <div class="cc-stat">
+                <div class="cc-stat-num">3</div>
+                <div class="cc-stat-label">Buku</div>
+              </div>
+            </div>
+            <div class="cc-progress">
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Reading Textbook</span><span class="cc-prog-count">35/35</span></div>
+                <div class="prog-bar"><div class="prog-fill ok" style="width:100%"></div></div>
+              </div>
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Activity Book</span><span class="cc-prog-count">33/35</span></div>
+                <div class="prog-bar"><div class="prog-fill ok" style="width:94%"></div></div>
+              </div>
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Literature Book</span><span class="cc-prog-count">30/35</span></div>
+                <div class="prog-bar"><div class="prog-fill warn" style="width:86%"></div></div>
+              </div>
+            </div>
+            <div class="cc-footer">
+              <div class="cc-footer-text">Lihat Detail</div>
+              <div class="cc-arrow">→</div>
+            </div>
+          </div>
+
+          <!-- Card 2: English 6A -->
+          <div class="class-card" style="--cc:#cc2200" onclick="showDetail('6A')">
+            <div class="cc-head">
+              <div class="cc-subject">English</div>
+              <div class="cc-year">Tahun 6A · 38 Murid</div>
+            </div>
+            <div class="cc-stats">
+              <div class="cc-stat">
+                <div class="cc-stat-num" style="color:var(--green)">33</div>
+                <div class="cc-stat-label">Lengkap</div>
+              </div>
+              <div class="cc-stat">
+                <div class="cc-stat-num" style="color:var(--red)">5</div>
+                <div class="cc-stat-label">Belum</div>
+              </div>
+              <div class="cc-stat">
+                <div class="cc-stat-num">3</div>
+                <div class="cc-stat-label">Buku</div>
+              </div>
+            </div>
+            <div class="cc-progress">
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Reading Textbook</span><span class="cc-prog-count">38/38</span></div>
+                <div class="prog-bar"><div class="prog-fill ok" style="width:100%"></div></div>
+              </div>
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Activity Book</span><span class="cc-prog-count">35/38</span></div>
+                <div class="prog-bar"><div class="prog-fill warn" style="width:92%"></div></div>
+              </div>
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Literature Book</span><span class="cc-prog-count">20/38</span></div>
+                <div class="prog-bar"><div class="prog-fill danger" style="width:53%"></div></div>
+              </div>
+            </div>
+            <div class="cc-footer">
+              <div class="cc-footer-text">Lihat Detail</div>
+              <div class="cc-arrow">→</div>
+            </div>
+          </div>
+
+          <!-- Card 3: English 6W -->
+          <div class="class-card" style="--cc:#9a6500" onclick="showDetail('6W')">
+            <div class="cc-head">
+              <div class="cc-subject">English</div>
+              <div class="cc-year">Tahun 6W · 32 Murid</div>
+            </div>
+            <div class="cc-stats">
+              <div class="cc-stat">
+                <div class="cc-stat-num" style="color:var(--green)">30</div>
+                <div class="cc-stat-label">Lengkap</div>
+              </div>
+              <div class="cc-stat">
+                <div class="cc-stat-num" style="color:var(--red)">2</div>
+                <div class="cc-stat-label">Belum</div>
+              </div>
+              <div class="cc-stat">
+                <div class="cc-stat-num">3</div>
+                <div class="cc-stat-label">Buku</div>
+              </div>
+            </div>
+            <div class="cc-progress">
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Reading Textbook</span><span class="cc-prog-count">32/32</span></div>
+                <div class="prog-bar"><div class="prog-fill ok" style="width:100%"></div></div>
+              </div>
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Activity Book</span><span class="cc-prog-count">31/32</span></div>
+                <div class="prog-bar"><div class="prog-fill ok" style="width:97%"></div></div>
+              </div>
+              <div class="cc-prog-row">
+                <div class="cc-prog-label"><span>Literature Book</span><span class="cc-prog-count">28/32</span></div>
+                <div class="prog-bar"><div class="prog-fill warn" style="width:88%"></div></div>
+              </div>
+            </div>
+            <div class="cc-footer">
+              <div class="cc-footer-text">Lihat Detail</div>
+              <div class="cc-arrow">→</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Aktiviti Terkini — Semua Kelas</div>
+            <span style="font-size:10px;color:var(--ink3);font-family:'JetBrains Mono',monospace;">Hari ini</span>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Masa</th><th>Kelas</th><th>Murid</th><th>Buku</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">09:41</td>
+                  <td><span class="tag tag-ink" style="font-size:9px;">5A</span></td>
+                  <td><div class="s-name"><div class="s-init">SK</div>Siti Khadijah</div></td>
+                  <td style="font-size:12px;">Activity Book</td>
+                  <td><span class="badge badge-ok">✓ Rekod</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">09:38</td>
+                  <td><span class="tag tag-red" style="font-size:9px;">6A</span></td>
+                  <td><div class="s-name"><div class="s-init" style="background:var(--amber)">MH</div>Muhammad Hariz</div></td>
+                  <td style="font-size:12px;">Literature Book</td>
+                  <td><span class="badge badge-ok">✓ Rekod</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">09:35</td>
+                  <td><span class="tag tag-ink" style="font-size:9px;border-color:var(--amber);color:var(--amber);">6W</span></td>
+                  <td><div class="s-name"><div class="s-init" style="background:var(--green)">AN</div>Amirah Nabilah</div></td>
+                  <td style="font-size:12px;">Reading Textbook</td>
+                  <td><span class="badge badge-ok">✓ Rekod</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== DETAIL KELAS ==================== -->
+    <div id="page-detail" class="page">
+      <div class="topbar">
+        <div class="hamburger" onclick="toggleSidebar()">
+          <div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div>
+        </div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-left">
+          <div class="topbar-title" id="detailTitle">English · Tahun 6A</div>
+          <div class="topbar-breadcrumb">
+            <span class="breadcrumb-link" onclick="showPage('dashboard',null)">Dashboard</span>
+            <span style="color:var(--ink3)">›</span>
+            <span class="breadcrumb-current" id="detailBreadcrumb">Tahun 6A</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost btn-sm" onclick="showPage('dashboard',null)">← Semua Kelas</button>
+          <button class="btn btn-primary btn-sm" onclick="showModal()">◎ Scan Kelas Ini</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="alert alert-warn">▲ &nbsp;<strong>5 murid</strong> dalam kelas ini belum lengkap. Literature Book paling ramai tertinggal.</div>
+
+        <div class="stats-strip">
+          <div class="stat-cell" style="--sc:var(--ink)"><div class="stat-label">Jumlah Murid</div><div class="stat-num">38</div><div class="stat-note">dalam kelas ini</div></div>
+          <div class="stat-cell" style="--sc:var(--green)"><div class="stat-label">Lengkap</div><div class="stat-num green">33</div><div class="stat-note">86.8%</div></div>
+          <div class="stat-cell" style="--sc:var(--red)"><div class="stat-label">Belum</div><div class="stat-num red">5</div><div class="stat-note">perlu tindakan</div></div>
+          <div class="stat-cell" style="--sc:var(--amber)"><div class="stat-label">Scan Hari Ini</div><div class="stat-num">8</div><div class="stat-note">terakhir 9:38 AM</div></div>
+        </div>
+
+        <div class="grid-3-1">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Status Ikut Buku</div><span class="tag tag-ink">3 Buku</span></div>
+            <div class="book-row">
+              <div class="book-row-header"><div class="book-row-name">📗 Reading Textbook</div><div class="book-row-count">38 / 38</div></div>
+              <div class="prog-bar"><div class="prog-fill ok" style="width:100%"></div></div>
+              <div class="book-row-pct" style="color:var(--green)">100.0% ✓</div>
+            </div>
+            <div class="book-row">
+              <div class="book-row-header"><div class="book-row-name">📘 Activity Book</div><div class="book-row-count">35 / 38</div></div>
+              <div class="prog-bar"><div class="prog-fill warn" style="width:92%"></div></div>
+              <div class="book-row-pct" style="color:var(--amber)">92.1%</div>
+            </div>
+            <div class="book-row">
+              <div class="book-row-header"><div class="book-row-name">📕 Literature Book</div><div class="book-row-count">20 / 38</div></div>
+              <div class="prog-bar"><div class="prog-fill danger" style="width:52.6%"></div></div>
+              <div class="book-row-pct" style="color:var(--red)">52.6%</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Trend Minggu</div></div>
+              <div class="card-body" style="padding-bottom:28px;">
+                <div class="mini-chart">
+                  <div class="bar-col" style="height:55%" data-label="Isn"></div>
+                  <div class="bar-col" style="height:70%" data-label="Sel"></div>
+                  <div class="bar-col" style="height:45%" data-label="Rab"></div>
+                  <div class="bar-col" style="height:85%" data-label="Kha"></div>
+                  <div class="bar-col today" style="height:60%" data-label="Jum"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Belum Lengkap</div><span class="tag tag-red">5</span></div>
+              <div style="padding:10px 16px;">
+                <div class="recent-item"><div class="recent-dot" style="background:var(--red)"></div><div class="recent-name">Ahmad Faris</div><span class="badge badge-partial">2/3</span></div>
+                <div class="recent-item"><div class="recent-dot" style="background:var(--red)"></div><div class="recent-name">Nurul Ain</div><span class="badge badge-partial">2/3</span></div>
+                <div class="recent-item"><div class="recent-dot" style="background:var(--red)"></div><div class="recent-name">Haziq Danial</div><span class="badge badge-none">1/3</span></div>
+                <div style="padding-top:10px;font-size:11px;color:var(--red);font-weight:700;cursor:pointer;letter-spacing:0.5px;">LIHAT SEMUA 5 →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rekod jadual -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Rekod Murid</div>
+            <div style="display:flex;gap:6px;">
+              <button class="export-btn">↓ Excel</button>
+              <button class="export-btn">↓ PDF</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>#</th><th>Nama Murid</th><th>Reading</th><th>Activity</th><th>Literature</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">01</td><td><div class="s-name"><div class="s-init">AF</div>Ahmad Faris</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-no">–</div></td><td><span class="badge badge-partial">2/3</span></td></tr>
+                <tr><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">02</td><td><div class="s-name"><div class="s-init" style="background:var(--green)">AN</div>Amirah Nabilah</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-yes">✓</div></td><td><span class="badge badge-ok">3/3</span></td></tr>
+                <tr><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">03</td><td><div class="s-name"><div class="s-init" style="background:var(--red)">HD</div>Haziq Danial</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-no">–</div></td><td><div class="tick tick-no">–</div></td><td><span class="badge badge-none">1/3</span></td></tr>
+                <tr><td colspan="6" style="text-align:center;font-size:10.5px;color:var(--ink3);padding:14px;font-family:'JetBrains Mono',monospace;">— 35 murid lagi —</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SCAN ==================== -->
+    <div id="page-scan" class="page">
+      <div class="topbar">
+        <div class="hamburger" onclick="toggleSidebar()"><div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div></div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-left">
+          <div class="topbar-title">Scan QR</div>
+          <div class="topbar-breadcrumb">Tuju kamera ke QR kad murid</div>
+        </div>
+        <button class="btn btn-ghost btn-sm">? Bantuan</button>
+      </div>
+      <div class="content">
+        <div class="scan-center">
+          <div class="scan-box">
+            <!-- Kelas selector -->
+            <div class="kelas-selector">
+              <div class="kelas-selector-label">Pilih Kelas Aktif</div>
+              <div class="kelas-pills">
+                <div class="kelas-pill active" onclick="selectKelas(this)">Tahun 5A</div>
+                <div class="kelas-pill" onclick="selectKelas(this)">Tahun 6A</div>
+                <div class="kelas-pill" onclick="selectKelas(this)">Tahun 6W</div>
+              </div>
+            </div>
+            <div class="rule"></div>
+            <div class="qr-frame">
+              <div class="qr-corner tl"></div><div class="qr-corner tr"></div><div class="qr-corner bl"></div><div class="qr-corner br"></div>
+              <div class="qr-scan-line"></div>
+              <div class="qr-icon">▦</div>
+            </div>
+            <div class="scan-title">Sedia Untuk Scan</div>
+            <div class="scan-sub">Kelas aktif: <strong>Tahun 5A</strong>. Tuju ke QR kod pada kad murid.</div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;letter-spacing:1px;" onclick="showModal()">◎ Simulate Scan (Demo)</button>
+            <div class="rule"></div>
+            <div>
+              <div class="recent-label">Scan Terkini</div>
+              <div class="recent-item"><div class="recent-dot" style="background:var(--green)"></div><div class="recent-name">Siti Khadijah</div><div class="recent-time">09:41</div></div>
+              <div class="recent-item"><div class="recent-dot" style="background:var(--green)"></div><div class="recent-name">Muhammad Hariz</div><div class="recent-time">09:38</div></div>
+              <div class="recent-item"><div class="recent-dot" style="background:var(--green)"></div><div class="recent-name">Amirah Nabilah</div><div class="recent-time">09:35</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== REKOD ==================== -->
+    <div id="page-rekod" class="page">
+      <div class="topbar">
+        <div class="hamburger" onclick="toggleSidebar()"><div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div></div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-left"><div class="topbar-title">Rekod & Laporan</div><div class="topbar-breadcrumb">Semua kelas · Semua rekod penyerahan</div></div>
+        <div class="export-group"><button class="export-btn">↓ Excel</button><button class="export-btn">↓ CSV</button><button class="export-btn">↓ PDF</button></div>
+      </div>
+      <div class="content">
+        <div class="tabs"><button class="tab active" onclick="switchTab(this)">Ikut Murid</button><button class="tab" onclick="switchTab(this)">Ikut Buku</button></div>
+        <div class="filter-bar">
+          <button class="filter-chip active">Semua Kelas</button>
+          <button class="filter-chip">Tahun 5A</button>
+          <button class="filter-chip">Tahun 6A</button>
+          <button class="filter-chip">Tahun 6W</button>
+          <button class="filter-chip">✕ Belum</button>
+          <input class="filter-input" placeholder="Cari murid...">
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>#</th><th>Kelas</th><th>Nama Murid</th><th>Reading</th><th>Activity</th><th>Literature</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">01</td><td><span class="tag tag-ink" style="font-size:9px;">5A</span></td><td><div class="s-name"><div class="s-init">AF</div>Ahmad Faris</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-no">–</div></td><td><span class="badge badge-partial">2/3</span></td></tr>
+                <tr><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">02</td><td><span class="tag tag-red" style="font-size:9px;">6A</span></td><td><div class="s-name"><div class="s-init" style="background:var(--green)">AN</div>Amirah Nabilah</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-yes">✓</div></td><td><span class="badge badge-ok">3/3</span></td></tr>
+                <tr><td style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">03</td><td><span class="tag tag-ink" style="font-size:9px;border-color:var(--amber);color:var(--amber);">6W</span></td><td><div class="s-name"><div class="s-init" style="background:var(--red)">HD</div>Haziq Danial</div></td><td><div class="tick tick-yes">✓</div></td><td><div class="tick tick-no">–</div></td><td><div class="tick tick-no">–</div></td><td><span class="badge badge-none">1/3</span></td></tr>
+                <tr><td colspan="7" style="text-align:center;font-size:10.5px;color:var(--ink3);padding:14px;font-family:'JetBrains Mono',monospace;">— 102 murid lagi —</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== KELAS ==================== -->
+    <div id="page-kelas" class="page">
+      <div class="topbar">
+        <div class="hamburger" onclick="toggleSidebar()"><div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div></div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-left"><div class="topbar-title">Senarai Kelas</div><div class="topbar-breadcrumb">3 kelas aktif</div></div>
+        <button class="btn btn-primary btn-sm">+ Tambah Kelas</button>
+      </div>
+      <div class="content">
+        <div class="settings-grid">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Kelas Anda</div></div>
+            <div style="padding:12px 16px;">
+              <div class="list-row"><div style="width:8px;height:8px;background:var(--green);flex-shrink:0;"></div><div class="list-name">English · Tahun 5A</div><span style="font-size:10px;color:var(--ink3);font-family:'JetBrains Mono',monospace;">35 murid</span><div style="display:flex;gap:4px;margin-left:8px;"><button class="icon-btn" onclick="showDetail('5A')">→</button><button class="icon-btn del">✕</button></div></div>
+              <div class="list-row"><div style="width:8px;height:8px;background:var(--red);flex-shrink:0;"></div><div class="list-name">English · Tahun 6A</div><span style="font-size:10px;color:var(--ink3);font-family:'JetBrains Mono',monospace;">38 murid</span><div style="display:flex;gap:4px;margin-left:8px;"><button class="icon-btn" onclick="showDetail('6A')">→</button><button class="icon-btn del">✕</button></div></div>
+              <div class="list-row"><div style="width:8px;height:8px;background:var(--amber);flex-shrink:0;"></div><div class="list-name">English · Tahun 6W</div><span style="font-size:10px;color:var(--ink3);font-family:'JetBrains Mono',monospace;">32 murid</span><div style="display:flex;gap:4px;margin-left:8px;"><button class="icon-btn" onclick="showDetail('6W')">→</button><button class="icon-btn del">✕</button></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Tambah Kelas Baru</div></div>
+            <div class="card-body">
+              <label class="input-label">Mata Pelajaran</label>
+              <input class="input" placeholder="cth: English, Matematik">
+              <label class="input-label">Tahun / Kelas</label>
+              <input class="input" placeholder="cth: Tahun 5A">
+              <label class="input-label">Bilangan Murid (anggaran)</label>
+              <input class="input" placeholder="cth: 35" type="number">
+              <button class="btn btn-primary" style="width:100%;justify-content:center;letter-spacing:0.5px;">Simpan Kelas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MURID ==================== -->
+    <div id="page-murid" class="page">
+      <div class="topbar">
+        <div class="hamburger" onclick="toggleSidebar()"><div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div></div>
+        <div class="topbar-divider"></div>
+        <div class="topbar-left"><div class="topbar-title">Senarai Murid</div><div class="topbar-breadcrumb">105 murid · 3 kelas</div></div>
+        <div class="topbar-actions"><button class="btn btn-ghost btn-sm">↓ Import</button><button class="btn btn-primary btn-sm">+ Tambah</button></div>
+      </div>
+      <div class="content">
+        <div class="filter-bar">
+          <button class="filter-chip active">Semua</button>
+          <button class="filter-chip">Tahun 5A</button>
+          <button class="filter-chip">Tahun 6A</button>
+          <button class="filter-chip">Tahun 6W</button>
+          <input class="filter-input" placeholder="Cari murid...">
+        </div>
+        <div class="card">
+          <div style="padding:12px 16px;">
+            <div class="list-row"><div class="list-num">01</div><span class="tag tag-ink" style="font-size:9px;flex-shrink:0;">5A</span><div class="s-init" style="width:26px;height:26px;font-size:9px;flex-shrink:0;">AF</div><div class="list-name">Ahmad Faris bin Razali</div><div style="display:flex;gap:4px;"><button class="icon-btn">✏</button><button class="icon-btn del">✕</button></div></div>
+            <div class="list-row"><div class="list-num">02</div><span class="tag tag-red" style="font-size:9px;flex-shrink:0;">6A</span><div class="s-init" style="width:26px;height:26px;font-size:9px;flex-shrink:0;background:var(--green)">AN</div><div class="list-name">Amirah Nabilah bt Azman</div><div style="display:flex;gap:4px;"><button class="icon-btn">✏</button><button class="icon-btn del">✕</button></div></div>
+            <div class="list-row"><div class="list-num">03</div><span class="tag" style="font-size:9px;flex-shrink:0;border-color:var(--amber);color:var(--amber);">6W</span><div class="s-init" style="width:26px;height:26px;font-size:9px;flex-shrink:0;background:var(--red)">HD</div><div class="list-name">Haziq Danial bin Haris</div><div style="display:flex;gap:4px;"><button class="icon-btn">✏</button><button class="icon-btn del">✕</button></div></div>
+            <div style="text-align:center;padding:12px 0;font-size:10.5px;color:var(--ink3);font-family:'JetBrains Mono',monospace;">— 102 murid lagi —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUKU, QRPRINT, TETAPAN — ringkas -->
+    <div id="page-buku" class="page">
+      <div class="topbar"><div class="hamburger" onclick="toggleSidebar()"><div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div></div><div class="topbar-divider"></div><div class="topbar-left"><div class="topbar-title">Senarai Buku</div><div class="topbar-breadcrumb">Buku dikongsi semua kelas</div></div><button class="btn btn-primary btn-sm">+ Tambah Buku</button></div>
+      <div class="content">
+        <div class="card"><div class="card-header"><div class="card-title">Buku Aktif</div></div><div style="padding:12px 16px;"><div class="list-row"><div style="font-size:16px">📗</div><div class="list-name">Reading Textbook Year 5 & 6</div><div style="display:flex;gap:4px;"><button class="icon-btn">✏</button><button class="icon-btn del">✕</button></div></div><div class="list-row"><div style="font-size:16px">📘</div><div class="list-name">Activity Book Year 5 & 6</div><div style="display:flex;gap:4px;"><button class="icon-btn">✏</button><button class="icon-btn del">✕</button></div></div><div class="list-row"><div style="font-size:16px">📕</div><div class="list-name">Literature Book Year 5 & 6</div><div style="display:flex;gap:4px;"><button class="icon-btn">✏</button><button class="icon-btn del">✕</button></div></div></div></div>
+      </div>
+    </div>
+
+    <div id="page-qrprint" class="page">
+      <div class="topbar"><div class="hamburger" onclick="toggleSidebar()"><div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div></div><div class="topbar-divider"></div><div class="topbar-left"><div class="topbar-title">Print QR Murid</div><div class="topbar-breadcrumb">Jana & cetak kad QR</div></div><div class="topbar-actions"><button class="btn btn-ghost btn-sm">↓ Download</button><button class="btn btn-primary btn-sm">⊟ Print</button></div></div>
+      <div class="content">
+        <div class="filter-bar"><button class="filter-chip active">Tahun 5A</button><button class="filter-chip">Tahun 6A</button><button class="filter-chip">Tahun 6W</button></div>
+        <div class="card"><div class="card-body"><div class="qr-grid"><div class="qr-card"><div class="qr-placeholder">▦</div><div class="qr-sname">Ahmad Faris</div><div class="qr-sid">5A-001</div></div><div class="qr-card"><div class="qr-placeholder">▦</div><div class="qr-sname">Amirah Nabilah</div><div class="qr-sid">5A-002</div></div><div class="qr-card"><div class="qr-placeholder">▦</div><div class="qr-sname">Haziq Danial</div><div class="qr-sid">5A-003</div></div><div class="qr-card"><div class="qr-placeholder">▦</div><div class="qr-sname">Nurul Ain</div><div class="qr-sid">5A-004</div></div><div class="qr-card"><div class="qr-placeholder">▦</div><div class="qr-sname">Siti Khadijah</div><div class="qr-sid">5A-005</div></div><div class="qr-card" style="opacity:0.3;border-style:dashed;"><div class="qr-placeholder">+30</div><div class="qr-sname" style="color:var(--ink3)">Lagi</div><div class="qr-sid">...</div></div></div></div></div>
+      </div>
+    </div>
+
+    <div id="page-tetapan" class="page">
+      <div class="topbar"><div class="hamburger" onclick="toggleSidebar()"><div class="ham-line"></div><div class="ham-line"></div><div class="ham-line"></div></div><div class="topbar-divider"></div><div class="topbar-left"><div class="topbar-title">Tetapan</div><div class="topbar-breadcrumb">Konfigurasi akaun & aplikasi</div></div></div>
+      <div class="content">
+
+        <!-- TEMA -->
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <div class="card-title">Tema Warna</div>
+            <span id="activeThemeName" style="font-size:11px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;">Powder Blue</span>
+          </div>
+          <div class="card-body">
+            <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;">Pilih tema pastel</div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+
+              <!-- Blue -->
+              <div class="theme-card" data-theme="blue" data-name="Powder Blue" onclick="applyTheme(this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid var(--rule);transition:all 0.2s;">
+                <div style="height:52px;background:linear-gradient(135deg,#e2eaf4,#dce8f5);position:relative;">
+                  <div style="position:absolute;bottom:6px;left:6px;right:6px;height:3px;border-radius:2px;background:#6b8fd4;opacity:0.7;"></div>
+                </div>
+                <div style="padding:8px 10px;background:#fff;">
+                  <div style="width:40%;height:4px;background:#e2eaf4;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:70%;height:4px;background:#d8e2f0;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:55%;height:4px;background:#6b8fd4;border-radius:2px;opacity:0.5;"></div>
+                </div>
+                <div style="padding:6px 10px 8px;background:#fff;border-top:1px solid #f0f0f0;">
+                  <div style="font-size:10px;font-weight:700;color:#3a5480;letter-spacing:0.3px;">Powder Blue</div>
+                </div>
+              </div>
+
+              <!-- Sage -->
+              <div class="theme-card" data-theme="sage" data-name="Sage Green" onclick="applyTheme(this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid var(--rule);transition:all 0.2s;">
+                <div style="height:52px;background:linear-gradient(135deg,#deeede,#d8efd8);position:relative;">
+                  <div style="position:absolute;bottom:6px;left:6px;right:6px;height:3px;border-radius:2px;background:#5a9460;opacity:0.7;"></div>
+                </div>
+                <div style="padding:8px 10px;background:#fff;">
+                  <div style="width:40%;height:4px;background:#deeede;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:70%;height:4px;background:#cce0cc;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:55%;height:4px;background:#5a9460;border-radius:2px;opacity:0.5;"></div>
+                </div>
+                <div style="padding:6px 10px 8px;background:#fff;border-top:1px solid #f0f0f0;">
+                  <div style="font-size:10px;font-weight:700;color:#2e5c2e;letter-spacing:0.3px;">Sage Green</div>
+                </div>
+              </div>
+
+              <!-- Lavender -->
+              <div class="theme-card" data-theme="lavender" data-name="Lavender" onclick="applyTheme(this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid var(--rule);transition:all 0.2s;">
+                <div style="height:52px;background:linear-gradient(135deg,#e8e4f4,#e0d8f8);position:relative;">
+                  <div style="position:absolute;bottom:6px;left:6px;right:6px;height:3px;border-radius:2px;background:#8060c0;opacity:0.7;"></div>
+                </div>
+                <div style="padding:8px 10px;background:#fff;">
+                  <div style="width:40%;height:4px;background:#e8e4f4;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:70%;height:4px;background:#d8d0ec;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:55%;height:4px;background:#8060c0;border-radius:2px;opacity:0.5;"></div>
+                </div>
+                <div style="padding:6px 10px 8px;background:#fff;border-top:1px solid #f0f0f0;">
+                  <div style="font-size:10px;font-weight:700;color:#4a3480;letter-spacing:0.3px;">Lavender</div>
+                </div>
+              </div>
+
+              <!-- Rose -->
+              <div class="theme-card" data-theme="rose" data-name="Dusty Rose" onclick="applyTheme(this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid var(--rule);transition:all 0.2s;">
+                <div style="height:52px;background:linear-gradient(135deg,#f0e0e6,#f5d8e0);position:relative;">
+                  <div style="position:absolute;bottom:6px;left:6px;right:6px;height:3px;border-radius:2px;background:#b86078;opacity:0.7;"></div>
+                </div>
+                <div style="padding:8px 10px;background:#fff;">
+                  <div style="width:40%;height:4px;background:#f0e0e6;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:70%;height:4px;background:#e8d0d8;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:55%;height:4px;background:#b86078;border-radius:2px;opacity:0.5;"></div>
+                </div>
+                <div style="padding:6px 10px 8px;background:#fff;border-top:1px solid #f0f0f0;">
+                  <div style="font-size:10px;font-weight:700;color:#7a3848;letter-spacing:0.3px;">Dusty Rose</div>
+                </div>
+              </div>
+
+              <!-- Ivory -->
+              <div class="theme-card" data-theme="ivory" data-name="Warm Ivory" onclick="applyTheme(this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid var(--rule);transition:all 0.2s;">
+                <div style="height:52px;background:linear-gradient(135deg,#f0e6d6,#f0e4d0);position:relative;">
+                  <div style="position:absolute;bottom:6px;left:6px;right:6px;height:3px;border-radius:2px;background:#9a7040;opacity:0.7;"></div>
+                </div>
+                <div style="padding:8px 10px;background:#fff;">
+                  <div style="width:40%;height:4px;background:#f0e6d6;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:70%;height:4px;background:#e0d0bc;border-radius:2px;margin-bottom:4px;"></div>
+                  <div style="width:55%;height:4px;background:#9a7040;border-radius:2px;opacity:0.5;"></div>
+                </div>
+                <div style="padding:6px 10px 8px;background:#fff;border-top:1px solid #f0f0f0;">
+                  <div style="font-size:10px;font-weight:700;color:#5c3e20;letter-spacing:0.3px;">Warm Ivory</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <div class="card"><div class="card-header"><div class="card-title">Profil Cikgu</div></div><div class="card-body"><label class="input-label">Nama</label><input class="input" value="Cikgu Zana"><label class="input-label">E-mel</label><input class="input" value="cikgu@sekolah.edu.my"><label class="input-label">Subjek</label><input class="input" value="Bahasa Inggeris"><button class="btn btn-primary" style="letter-spacing:0.5px;">Simpan</button></div></div>
+          <div class="card"><div class="card-header"><div class="card-title">Keselamatan</div></div><div class="card-body"><label class="input-label">Kata Laluan Baru</label><input class="input" type="password" placeholder="••••••••"><label class="input-label">Sahkan</label><input class="input" type="password" placeholder="••••••••"><button class="btn btn-outline" style="letter-spacing:0.5px;">Tukar Kata Laluan</button><div style="height:1px;background:var(--rule);margin:16px 0;"></div><button class="btn btn-red" style="width:100%;justify-content:center;letter-spacing:0.5px;" onclick="document.getElementById('mainApp').style.display='none';document.getElementById('loginScreen').style.display='flex'">✕ Log Keluar</button></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+</div><!-- end mainApp -->
+
+<!-- SCAN MODAL -->
+<div id="scanModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)hideModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-init">AF</div>
+      <div><div class="modal-sname">Ahmad Faris bin Razali</div><div class="modal-smeta">Tahun 5A · No. 01 · 5A-001</div></div>
+    </div>
+    <div class="mprog"><div class="mprog-dot done"></div><div class="mprog-dot done"></div><div class="mprog-dot"></div></div>
+    <div class="modal-body">
+      <div class="modal-sec">Pilih buku yang dihantar</div>
+      <div class="bci checked" onclick="this.classList.toggle('checked')"><div class="bci-box">✓</div><div class="bci-name">📗 Reading Textbook</div><div class="bci-date">1 Jun</div></div>
+      <div class="bci checked" onclick="this.classList.toggle('checked')"><div class="bci-box">✓</div><div class="bci-name">📘 Activity Book</div><div class="bci-date">1 Jun</div></div>
+      <div class="bci" onclick="this.classList.toggle('checked')"><div class="bci-box"></div><div class="bci-name">📕 Literature Book</div><div class="bci-date none">Belum</div></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="hideModal()">Batal</button>
+      <button class="btn btn-primary" style="letter-spacing:0.5px;" onclick="hideModal();alert('Rekod berjaya disimpan!')">Simpan Rekod</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const isDesktop = () => window.innerWidth >= 1024;
+  let sidebarOpen = isDesktop();
+
+  function updateSidebarState() {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('mainContent');
+    const overlay = document.getElementById('sidebarOverlay');
+    const allHam = document.querySelectorAll('.hamburger');
+
+    if (sidebarOpen) {
+      if (isDesktop()) {
+        sidebar.classList.remove('force-collapsed');
+        sidebar.classList.remove('open');
+        main.classList.remove('sidebar-hidden');
+        overlay.classList.remove('show');
+      } else {
+        sidebar.classList.add('open');
+        overlay.classList.add('show');
+      }
+      allHam.forEach(h => h.classList.remove('open'));
+    } else {
+      if (isDesktop()) {
+        sidebar.classList.add('force-collapsed');
+        main.classList.add('sidebar-hidden');
+        overlay.classList.remove('show');
+      } else {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      }
+      allHam.forEach(h => h.classList.add('open'));
+    }
+  }
+
+  function toggleSidebar() {
+    sidebarOpen = !sidebarOpen;
+    updateSidebarState();
+  }
+
+  function closeSidebar() {
+    sidebarOpen = false;
+    updateSidebarState();
+  }
+
+  window.addEventListener('resize', () => {
+    sidebarOpen = isDesktop();
+    updateSidebarState();
+  });
+
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id)?.classList.add('active');
+    if (el) el.classList.add('active');
+  }
+
+  function showDetail(kelas) {
+    const data = {
+      '5A': { title: 'English · Tahun 5A', crumb: 'Tahun 5A' },
+      '6A': { title: 'English · Tahun 6A', crumb: 'Tahun 6A' },
+      '6W': { title: 'English · Tahun 6W', crumb: 'Tahun 6W' },
+    };
+    document.getElementById('detailTitle').textContent = data[kelas]?.title || 'Detail Kelas';
+    document.getElementById('detailBreadcrumb').textContent = data[kelas]?.crumb || kelas;
+    showPage('detail', null);
+  }
+
+  function showApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+  }
+
+  function showModal() { document.getElementById('scanModal').style.display = 'flex'; }
+  function hideModal() { document.getElementById('scanModal').style.display = 'none'; }
+  function switchTab(el) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+  function selectKelas(el) { document.querySelectorAll('.kelas-pill').forEach(p => p.classList.remove('active')); el.classList.add('active'); document.querySelector('.scan-sub strong').textContent = el.textContent; }
+
+  // ===== THEME SYSTEM =====
+  const themeNames = {
+    blue: 'Powder Blue',
+    sage: 'Sage Green',
+    lavender: 'Lavender',
+    rose: 'Dusty Rose',
+    ivory: 'Warm Ivory'
+  };
+
+  function applyTheme(el) {
+    const theme = el.dataset.theme;
+    const name = el.dataset.name;
+
+    // Apply ke html
+    document.documentElement.setAttribute('data-theme', theme);
+
+    // Update nama aktif
+    const label = document.getElementById('activeThemeName');
+    if (label) label.textContent = name;
+
+    // Update selected state pada kad
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+
+    // Simpan ke localStorage
+    localStorage.setItem('bukutrack-theme', theme);
+
+    // Animate flash
+    document.body.style.transition = 'background 0.3s ease';
+    setTimeout(() => { document.body.style.transition = ''; }, 400);
+  }
+
+  function loadSavedTheme() {
+    const saved = localStorage.getItem('bukutrack-theme') || 'blue';
+    document.documentElement.setAttribute('data-theme', saved);
+
+    // Update label
+    const label = document.getElementById('activeThemeName');
+    if (label) label.textContent = themeNames[saved] || 'Powder Blue';
+
+    // Mark selected card
+    const card = document.querySelector(`.theme-card[data-theme="${saved}"]`);
+    if (card) card.classList.add('selected');
+  }
+
+  // Load tema bila app dibuka
+  loadSavedTheme();
+  document.getElementById('mainApp') && loadSavedTheme();
+
+  // Jalankan semula bila masuk tetapan
+  const origShowPage = showPage;
+  function showPage(id, el) {
+    origShowPage(id, el);
+    if (id === 'tetapan') {
+      setTimeout(loadSavedTheme, 50);
+    }
+  }
+</script>
+</body>
+</html>
