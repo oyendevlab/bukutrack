@@ -8,6 +8,9 @@ const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
 const Settings = lazy(() => import('./pages/Settings.jsx'))
 const Scan = lazy(() => import('./pages/Scan.jsx'))
 const Records = lazy(() => import('./pages/Records.jsx'))
+const Classes = lazy(() => import('./pages/Classes.jsx'))
+const Students = lazy(() => import('./pages/Students.jsx'))
+const Books = lazy(() => import('./pages/Books.jsx'))
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -33,6 +36,9 @@ function AppRoutes() {
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="/scan" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
         <Route path="/records" element={<ProtectedRoute><Records /></ProtectedRoute>} />
+        <Route path="/classes" element={<ProtectedRoute><Classes /></ProtectedRoute>} />
+        <Route path="/students" element={<ProtectedRoute><Students /></ProtectedRoute>} />
+        <Route path="/books" element={<ProtectedRoute><Books /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
