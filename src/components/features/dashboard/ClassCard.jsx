@@ -22,14 +22,33 @@ export default function ClassCard({ cls, students, books, submissions, onClick }
   const incompleteCount = totalStudents - completeCount
   const accentColor = CLASS_COLORS[cls.color] || CLASS_COLORS.blue
 
+  const pctOverall = totalStudents > 0 ? Math.round((completeCount / totalStudents) * 100) : 0
+
   return (
     <div className="class-card" style={{ '--cc': accentColor }} onClick={() => onClick(cls.id)}>
       <div className="cc-head">
-        <div className="cc-subject">{cls.subject}</div>
-        <div className="cc-year">{cls.year_name} · {totalStudents} {t('class.students')}</div>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+          <div>
+            <div className="cc-subject">{cls.subject}</div>
+            <div className="cc-year">{cls.year_name}</div>
+          </div>
+          {totalStudents > 0 && (
+            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+              <div style={{
+                fontFamily: 'var(--font-mono)', fontSize: '18px', fontWeight: 700, lineHeight: 1,
+                color: pctOverall === 100 ? 'var(--green)' : pctOverall >= 70 ? 'var(--amber)' : 'var(--red)',
+              }}>{pctOverall}%</div>
+              <div style={{ fontSize: '9px', color: 'var(--ink3)', marginTop: '2px', letterSpacing: '0.5px' }}>lengkap</div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="cc-stats">
+        <div className="cc-stat">
+          <div className="cc-stat-num" style={{ color: 'var(--ink)' }}>{totalStudents}</div>
+          <div className="cc-stat-label">{t('class.students')}</div>
+        </div>
         <div className="cc-stat">
           <div className="cc-stat-num" style={{ color: 'var(--green)' }}>{completeCount}</div>
           <div className="cc-stat-label">{t('class.complete')}</div>
@@ -38,13 +57,17 @@ export default function ClassCard({ cls, students, books, submissions, onClick }
           <div className="cc-stat-num" style={{ color: incompleteCount > 0 ? 'var(--red)' : 'var(--ink3)' }}>{incompleteCount}</div>
           <div className="cc-stat-label">{t('class.incomplete')}</div>
         </div>
-        <div className="cc-stat">
-          <div className="cc-stat-num">{totalBooks}</div>
-          <div className="cc-stat-label">{t('class.books')}</div>
-        </div>
       </div>
 
-      {totalStudents > 0 && classBooks.length > 0 && (
+      {classBooks.length === 0 ? (
+        <div style={{ padding: '10px 18px 14px', fontSize: '11px', color: 'var(--ink3)', fontStyle: 'italic' }}>
+          Belum ada buku ditetapkan
+        </div>
+      ) : totalStudents === 0 ? (
+        <div style={{ padding: '10px 18px 14px', fontSize: '11px', color: 'var(--ink3)', fontStyle: 'italic' }}>
+          Belum ada murid dalam kelas ini
+        </div>
+      ) : (
         <div className="cc-progress">
           {classBooks.slice(0, 3).map(book => {
             const count = classStudents.filter(st =>

@@ -306,7 +306,7 @@ body {
 
 .topbar-divider { width: 2px; height: 20px; background: var(--rule); flex-shrink: 0; }
 .topbar-left { flex: 1; min-width: 0; overflow: hidden; }
-.topbar-title { font-family: var(--font-heading); font-size: 20px; letter-spacing: 2px; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
+.topbar-title { font-family: var(--font-heading); font-size: 22px; letter-spacing: 2.5px; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); text-transform: uppercase; }
 .topbar-breadcrumb { font-size: 10px; color: var(--ink3); font-weight: 500; margin-top: 1px; display: flex; align-items: center; gap: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topbar-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
@@ -322,6 +322,51 @@ body {
 .card-header { padding: 13px 18px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-radius: var(--radius-card) var(--radius-card) 0 0; }
 .card-title { font-family: var(--font-heading); font-size: 15px; letter-spacing: 1.2px; color: var(--ink); }
 .card-body { padding: 18px; }
+
+/* ===== BENTO STATS (Dashboard) ===== */
+.bento-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+@media (max-width: 480px) { .bento-stats { grid-template-columns: 1fr; gap: 8px; } }
+
+.bento-cell {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 16px 18px 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(100,140,200,0.06);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.bento-cell:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(100,140,200,0.12); }
+.bento-cell::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: var(--bc, var(--accent));
+}
+
+.bento-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.bento-icon { font-size: 20px; line-height: 1; }
+.bento-tag {
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px; font-family: var(--font-mono);
+  background: var(--surface2); color: var(--ink3);
+  letter-spacing: 0.3px;
+}
+.bento-num {
+  font-family: var(--font-heading);
+  font-size: 36px; line-height: 1; color: var(--ink);
+  letter-spacing: 1px; margin-bottom: 4px;
+}
+.bento-label {
+  font-size: 10px; font-weight: 700; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
 
 /* ===== OVERVIEW STATS ===== */
 .overview-stats {

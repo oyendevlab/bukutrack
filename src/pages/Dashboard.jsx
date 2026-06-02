@@ -56,26 +56,35 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Overview Stats */}
-      <div className="overview-stats">
-        <div className="ov-cell" style={{ '--sc': 'var(--ink)' }}>
-          <div className="ov-label">{t('dashboard.totalStudents')}</div>
-          <div className="ov-num">{totalStudents}</div>
-          <div className="ov-note">{classes.length} {t('dashboard.activeClasses')}</div>
-        </div>
-        <div className="ov-cell" style={{ '--sc': 'var(--green)' }}>
-          <div className="ov-label">{t('dashboard.completeAll')}</div>
-          <div className="ov-num green">{completeStudents}</div>
-          <div className="ov-note">
-            {totalStudents > 0 ? ((completeStudents / totalStudents) * 100).toFixed(1) : 0}% {t('dashboard.overall')}
+      {/* Overview Stats — Bento */}
+      <div className="bento-stats">
+        <div className="bento-cell" style={{ '--bc': 'var(--accent)' }}>
+          <div className="bento-top">
+            <span className="bento-icon">👥</span>
+            <span className="bento-tag">{classes.length} kelas</span>
           </div>
+          <div className="bento-num">{totalStudents}</div>
+          <div className="bento-label">{t('dashboard.totalStudents')}</div>
         </div>
-        <div className="ov-cell" style={{ '--sc': 'var(--red)' }}>
-          <div className="ov-label">{t('dashboard.incomplete')}</div>
-          <div className="ov-num red">{incompleteStudents}</div>
-          <div className="ov-note">
-            {totalStudents > 0 ? ((incompleteStudents / totalStudents) * 100).toFixed(1) : 0}% {t('dashboard.needAction')}
+        <div className="bento-cell" style={{ '--bc': 'var(--green)' }}>
+          <div className="bento-top">
+            <span className="bento-icon">✅</span>
+            <span className="bento-tag" style={{ color: 'var(--green)', background: 'var(--green-bg)' }}>
+              {totalStudents > 0 ? ((completeStudents / totalStudents) * 100).toFixed(0) : 0}%
+            </span>
           </div>
+          <div className="bento-num" style={{ color: 'var(--green)' }}>{completeStudents}</div>
+          <div className="bento-label">{t('dashboard.completeAll')}</div>
+        </div>
+        <div className="bento-cell" style={{ '--bc': 'var(--red)' }}>
+          <div className="bento-top">
+            <span className="bento-icon">{incompleteStudents > 0 ? '⚠️' : '🎉'}</span>
+            <span className="bento-tag" style={{ color: incompleteStudents > 0 ? 'var(--red)' : 'var(--green)', background: incompleteStudents > 0 ? 'var(--red-bg)' : 'var(--green-bg)' }}>
+              {totalStudents > 0 ? ((incompleteStudents / totalStudents) * 100).toFixed(0) : 0}%
+            </span>
+          </div>
+          <div className="bento-num" style={{ color: incompleteStudents > 0 ? 'var(--red)' : 'var(--ink3)' }}>{incompleteStudents}</div>
+          <div className="bento-label">{t('dashboard.incomplete')}</div>
         </div>
       </div>
 
