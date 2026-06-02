@@ -276,3 +276,9 @@ body {
 .content { padding: 18px 16px; }
 @media (min-width: 640px) { .content { padding: 24px 24px; } }
 @media (min-width: 1024px) { .content { padding: 28px 32px; } }
+
+/* ===== CARD ===== */
+.card { background: var(--surface); border: 1px solid var(--rule); margin-bottom: 16px; border-radius: var(--radius-card); box-shadow: 0 2px 8px rgba(100,140,200,0.06); }
+.card-header { padding: 13px 18px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-radius: var(--radius-card) var(--radius-card) 0 0; }
+.card-title { font-family: var(--font-heading); font-size: 15px; letter-spacing: 1.2px; color: var(--ink); }
+.card-body { padding: 18px; }
