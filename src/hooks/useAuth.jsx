@@ -29,6 +29,11 @@ export function AuthProvider({ children }) {
     setTeacher(data)
     if (data?.style) document.documentElement.setAttribute('data-style', data.style)
     if (data?.theme) document.documentElement.setAttribute('data-theme', data.theme)
+    if (data?.language) {
+      localStorage.setItem('bukutrack-language', data.language)
+      const { default: i18n } = await import('../i18n/index.js')
+      i18n.changeLanguage(data.language)
+    }
     setLoading(false)
   }
 
