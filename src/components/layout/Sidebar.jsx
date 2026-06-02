@@ -19,7 +19,7 @@ const NAV_ITEMS = [
   { icon: '◇', labelKey: 'nav.settings', path: '/settings' },
 ]
 
-export default function Sidebar({ open, onClose, incompleteCount = 0 }) {
+export default function Sidebar({ open, collapsed = false, onClose, incompleteCount = 0 }) {
   const navigate = useNavigate()
   const location = useLocation()
   const { teacher } = useAuth()
@@ -39,7 +39,7 @@ export default function Sidebar({ open, onClose, incompleteCount = 0 }) {
     <>
       {open && <div className="sidebar-overlay show" onClick={onClose} />}
 
-      <aside className={`sidebar${open ? ' open' : ''}`}>
+      <aside className={`sidebar${open ? ' open' : ''}${collapsed ? ' force-collapsed' : ''}`}>
         <div className="logo">
           <div className="logo-mark">BUKU<span>TRACK</span></div>
           <div className="logo-sub">v1.0 · Cikgu Portal</div>

@@ -3,7 +3,8 @@ import Sidebar from './Sidebar.jsx'
 import Topbar from './Topbar.jsx'
 
 export default function Layout({ title, breadcrumb, actions, children, incompleteCount }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)       // mobile slide-in
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false) // desktop hide
 
   useEffect(() => {
     function handleResize() {
@@ -13,20 +14,29 @@ export default function Layout({ title, breadcrumb, actions, children, incomplet
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  function handleToggle() {
+    if (window.innerWidth >= 1024) {
+      setSidebarCollapsed(c => !c)
+    } else {
+      setSidebarOpen(o => !o)
+    }
+  }
+
   return (
     <div>
       <Sidebar
         open={sidebarOpen}
+        collapsed={sidebarCollapsed}
         onClose={() => setSidebarOpen(false)}
         incompleteCount={incompleteCount}
       />
-      <div className="main">
+      <div className={`main${sidebarCollapsed ? ' sidebar-hidden' : ''}`}>
         <Topbar
           title={title}
           breadcrumb={breadcrumb}
           actions={actions}
           sidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen(o => !o)}
+          onToggleSidebar={handleToggle}
         />
         <div className="content">
           {children}

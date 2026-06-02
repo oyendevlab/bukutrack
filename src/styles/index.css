@@ -193,6 +193,9 @@ body {
 
 @media (min-width: 1024px) {
   .sidebar { transform: translateX(0); }
+  /* Hamburger boleh collapse sidebar di desktop */
+  .sidebar.force-collapsed { transform: translateX(-100%); }
+  .main.sidebar-hidden { margin-left: 0; }
 }
 
 .sidebar-overlay {
@@ -203,6 +206,11 @@ body {
   z-index: 199;
 }
 .sidebar-overlay.show { display: block; }
+
+/* Overlay HANYA pada mobile — desktop sidebar kekal tanpa overlay */
+@media (min-width: 1024px) {
+  .sidebar-overlay.show { display: none !important; }
+}
 
 .logo { padding: 24px 24px 20px; border-bottom: 1px solid var(--sidebar-border); }
 .logo-mark { font-family: var(--font-heading); font-size: 28px; color: var(--sidebar-text-active); letter-spacing: 3px; line-height: 1; }
