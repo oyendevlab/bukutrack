@@ -13,6 +13,8 @@ const Students = lazy(() => import('./pages/Students.jsx'))
 const Books = lazy(() => import('./pages/Books.jsx'))
 const ClassDetail = lazy(() => import('./pages/ClassDetail.jsx'))
 const QRPrint = lazy(() => import('./pages/QRPrint.jsx'))
+const Privacy = lazy(() => import('./pages/Privacy.jsx'))
+const Donate = lazy(() => import('./pages/Donate.jsx'))
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -43,6 +45,8 @@ function AppRoutes() {
         <Route path="/books" element={<ProtectedRoute><Books /></ProtectedRoute>} />
         <Route path="/class/:classId" element={<ProtectedRoute><ClassDetail /></ProtectedRoute>} />
         <Route path="/qr-print" element={<ProtectedRoute><QRPrint /></ProtectedRoute>} />
+        <Route path="/settings/privacy" element={<ProtectedRoute><Privacy /></ProtectedRoute>} />
+        <Route path="/settings/donate" element={<ProtectedRoute><Donate /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
