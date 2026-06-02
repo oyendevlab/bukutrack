@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
+import { EditBtn, DeleteBtn } from '../components/ui/IconBtn.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 
@@ -92,8 +93,8 @@ export default function Classes() {
                       <td><div style={{ width: 16, height: 16, borderRadius: '50%', background: hex, border: '2px solid var(--rule)' }} /></td>
                       <td>
                         <div style={{ display: 'flex', gap: '6px' }}>
-                          <button className="icon-btn" onClick={() => openEdit(cls)}>✎</button>
-                          <button className="icon-btn del" onClick={() => setConfirmDelete(cls)}>✕</button>
+                          <EditBtn onClick={() => openEdit(cls)} />
+                          <DeleteBtn onClick={() => setConfirmDelete(cls)} />
                         </div>
                       </td>
                     </tr>

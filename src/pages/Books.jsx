@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
+import { EditBtn, DeleteBtn } from '../components/ui/IconBtn.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
 
@@ -82,8 +83,8 @@ export default function Books() {
               <div style={{ fontSize: '22px', lineHeight: 1 }}>{b.emoji}</div>
               <div className="list-name">{b.name}</div>
               <span className="tag tag-ink" style={{ fontSize: '9px' }}>{getClassName(b.class_id)}</span>
-              <button className="icon-btn" onClick={() => openEdit(b)}>✎</button>
-              <button className="icon-btn del" onClick={() => setConfirmDelete(b)}>✕</button>
+              <EditBtn onClick={() => openEdit(b)} />
+              <DeleteBtn onClick={() => setConfirmDelete(b)} />
             </div>
           ))}
         </div>

@@ -7,6 +7,7 @@ import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useSubmissions } from '../hooks/useSubmissions.jsx'
 import { exportToExcel, exportToCsv, exportToPdf } from '../lib/export.js'
+import { ExportBtn } from '../components/ui/IconBtn.jsx'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -212,9 +213,9 @@ export default function ClassDetail() {
         <div className="card-header">
           <div className="card-title">{t('class.studentRecords')}</div>
           <div style={{ display: 'flex', gap: '6px' }}>
-            <button className="export-btn" onClick={() => exportToExcel(studentRecords, classBooks, cls.year_name)}>↓ Excel</button>
-            <button className="export-btn" onClick={() => exportToCsv(studentRecords, classBooks, cls.year_name)}>↓ CSV</button>
-            <button className="export-btn" onClick={() => exportToPdf(studentRecords, classBooks, cls.year_name)}>↓ PDF</button>
+            <ExportBtn type="excel" label="Excel" onClick={() => exportToExcel(studentRecords, classBooks, cls.year_name)} />
+            <ExportBtn type="csv" label="CSV" onClick={() => exportToCsv(studentRecords, classBooks, cls.year_name)} />
+            <ExportBtn type="pdf" label="PDF" onClick={() => exportToPdf(studentRecords, classBooks, cls.year_name)} />
           </div>
         </div>
         <div className="table-wrap">

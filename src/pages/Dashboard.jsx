@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Users, CheckCircle, WarningCircle, Confetti } from '@phosphor-icons/react'
 import Layout from '../components/layout/Layout.jsx'
 import ClassCard from '../components/features/dashboard/ClassCard.jsx'
 import RecentActivity from '../components/features/dashboard/RecentActivity.jsx'
@@ -60,7 +61,7 @@ export default function Dashboard() {
       <div className="bento-stats">
         <div className="bento-cell" style={{ '--bc': 'var(--accent)' }}>
           <div className="bento-top">
-            <span className="bento-icon">👥</span>
+            <Users size={22} weight="duotone" color="var(--accent)" />
             <span className="bento-tag">{classes.length} kelas</span>
           </div>
           <div className="bento-num">{totalStudents}</div>
@@ -68,7 +69,7 @@ export default function Dashboard() {
         </div>
         <div className="bento-cell" style={{ '--bc': 'var(--green)' }}>
           <div className="bento-top">
-            <span className="bento-icon">✅</span>
+            <CheckCircle size={22} weight="duotone" color="var(--green)" />
             <span className="bento-tag" style={{ color: 'var(--green)', background: 'var(--green-bg)' }}>
               {totalStudents > 0 ? ((completeStudents / totalStudents) * 100).toFixed(0) : 0}%
             </span>
@@ -76,9 +77,11 @@ export default function Dashboard() {
           <div className="bento-num" style={{ color: 'var(--green)' }}>{completeStudents}</div>
           <div className="bento-label">{t('dashboard.completeAll')}</div>
         </div>
-        <div className="bento-cell" style={{ '--bc': 'var(--red)' }}>
+        <div className="bento-cell" style={{ '--bc': incompleteStudents > 0 ? 'var(--red)' : 'var(--green)' }}>
           <div className="bento-top">
-            <span className="bento-icon">{incompleteStudents > 0 ? '⚠️' : '🎉'}</span>
+            {incompleteStudents > 0
+              ? <WarningCircle size={22} weight="duotone" color="var(--red)" />
+              : <Confetti size={22} weight="duotone" color="var(--green)" />}
             <span className="bento-tag" style={{ color: incompleteStudents > 0 ? 'var(--red)' : 'var(--green)', background: incompleteStudents > 0 ? 'var(--red-bg)' : 'var(--green-bg)' }}>
               {totalStudents > 0 ? ((incompleteStudents / totalStudents) * 100).toFixed(0) : 0}%
             </span>

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
+import { EditBtn, DeleteBtn, UploadBtn } from '../components/ui/IconBtn.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
 
@@ -86,7 +87,7 @@ export default function Students() {
       breadcrumb={t('nav.management')}
       actions={
         <>
-          <button className="btn btn-ghost btn-sm" onClick={() => csvRef.current?.click()}>
+          <button className="btn btn-ghost btn-sm" onClick={() => csvRef.current?.click()} style={{display:'inline-flex',alignItems:'center',gap:'6px'}}>
             ↑ {t('students.import')}
           </button>
           <button className="btn btn-primary btn-sm" onClick={openAdd}>+ {t('students.add')}</button>
@@ -139,8 +140,8 @@ export default function Students() {
                     <td style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--ink3)' }}>{s.qr_code?.slice(0, 8)}…</td>
                     <td>
                       <div style={{ display: 'flex', gap: '6px' }}>
-                        <button className="icon-btn" onClick={() => openEdit(s)}>✎</button>
-                        <button className="icon-btn del" onClick={() => setConfirmDelete(s)}>✕</button>
+                        <EditBtn onClick={() => openEdit(s)} />
+                        <DeleteBtn onClick={() => setConfirmDelete(s)} />
                       </div>
                     </td>
                   </tr>
