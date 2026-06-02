@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Camera, QrCode } from '@phosphor-icons/react'
 
 export default function ScannerCamera({ onScan, active }) {
   const scannerRef = useRef(null)
@@ -54,13 +55,13 @@ export default function ScannerCamera({ onScan, active }) {
           <div className="qr-corner tl" /><div className="qr-corner tr" />
           <div className="qr-corner bl" /><div className="qr-corner br" />
           <div className="qr-scan-line" />
-          <div className="qr-icon">▦</div>
+          <div className="qr-icon"><QrCode size={52} weight="thin" /></div>
         </div>
       )}
 
       {error && (
         <div className="qr-frame" style={{ flexDirection: 'column', gap: '10px', padding: '20px' }}>
-          <div style={{ fontSize: '28px', opacity: 0.25 }}>📷</div>
+          <Camera size={36} weight="thin" style={{ opacity: 0.3, color: 'var(--ink)' }} />
           <div style={{ fontSize: '11px', color: 'var(--red)', fontWeight: 600, textAlign: 'center' }}>{error}</div>
           <button className="btn btn-ghost btn-sm" onClick={startScanner}>Cuba Semula</button>
         </div>

@@ -8,6 +8,7 @@ import { useBooks } from '../hooks/useBooks.jsx'
 import { useSubmissions } from '../hooks/useSubmissions.jsx'
 import { exportToExcel, exportToCsv, exportToPdf } from '../lib/export.js'
 import { ExportBtn } from '../components/ui/IconBtn.jsx'
+import { ArrowLeft, QrCode } from '@phosphor-icons/react'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -110,8 +111,8 @@ export default function ClassDetail() {
       }
       actions={
         <>
-          <button className="btn btn-ghost btn-sm" onClick={() => navigate('/')}>← {t('class.allClasses')}</button>
-          <button className="btn btn-primary btn-sm" onClick={() => navigate('/scan')}>◎ {t('class.scanThisClass')}</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => navigate('/')}><ArrowLeft size={14} weight="bold" /> {t('class.allClasses')}</button>
+          <button className="btn btn-primary btn-sm" onClick={() => navigate('/scan')}><QrCode size={14} weight="bold" /> {t('class.scanThisClass')}</button>
         </>
       }
     >

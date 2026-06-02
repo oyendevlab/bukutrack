@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Users, CheckCircle, WarningCircle, Confetti } from '@phosphor-icons/react'
+import { Users, CheckCircle, WarningCircle, Confetti, ArrowSquareOut, QrCode } from '@phosphor-icons/react'
 import Layout from '../components/layout/Layout.jsx'
 import ClassCard from '../components/features/dashboard/ClassCard.jsx'
 import RecentActivity from '../components/features/dashboard/RecentActivity.jsx'
@@ -42,10 +42,12 @@ export default function Dashboard() {
       actions={
         <>
           <button className="btn btn-ghost btn-sm" onClick={() => navigate('/records')}>
-            ↗ <span>{t('dashboard.reports')}</span>
+            <ArrowSquareOut size={15} weight="bold" />
+            <span>{t('dashboard.reports')}</span>
           </button>
           <button className="btn btn-primary btn-sm" onClick={() => navigate('/scan')}>
-            ◎ <span>{t('dashboard.startScan')}</span>
+            <QrCode size={15} weight="bold" />
+            <span>{t('dashboard.startScan')}</span>
           </button>
         </>
       }

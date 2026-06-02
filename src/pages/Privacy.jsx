@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { GoogleLogo, Key, EnvelopeSimple } from '@phosphor-icons/react'
 import Layout from '../components/layout/Layout.jsx'
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
 import { useAuth } from '../hooks/useAuth.jsx'
@@ -80,7 +81,16 @@ export default function Privacy() {
       {/* Keselamatan */}
       <Section title="Keselamatan Akaun">
         <InfoRow label="E-mel" value={user?.email || '—'} />
-        <InfoRow label="Log Masuk" value={isGoogle ? '🔵 Google OAuth' : '🔑 E-mel & Kata Laluan'} />
+        <InfoRow
+          label="Log Masuk"
+          value={
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              {isGoogle
+                ? <><GoogleLogo size={16} weight="fill" color="#4285F4" /> Google OAuth</>
+                : <><EnvelopeSimple size={16} weight="duotone" color="var(--accent)" /> E-mel & Kata Laluan</>}
+            </span>
+          }
+        />
         <InfoRow label="Akaun Dibuat" value={createdAt} />
         <div style={{ height: 1 }} />
         <div style={{ marginTop: '14px' }}>
@@ -88,7 +98,8 @@ export default function Privacy() {
             <div className="alert alert-ok" style={{ marginBottom: 0 }}>✓ &nbsp;E-mel reset kata laluan telah dihantar ke <strong>{user?.email}</strong></div>
           ) : !isGoogle && (
             <button className="btn btn-ghost" onClick={handleResetPassword}>
-              🔑 Reset Kata Laluan
+              <Key size={14} weight="bold" />
+              Reset Kata Laluan
             </button>
           )}
         </div>
