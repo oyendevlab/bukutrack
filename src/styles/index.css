@@ -821,9 +821,6 @@ body {
     border-radius: 50%;
     background: var(--accent);
     color: white;
-    font-size: 26px;
-    font-weight: 300;
-    line-height: 1;
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 16px rgba(59,130,246,0.4);
@@ -832,6 +829,67 @@ body {
     -webkit-tap-highlight-color: transparent;
   }
   .fab:active { transform: scale(0.92); }
+  .fab.fab-open { background: var(--ink); }
+}
+
+/* FAB speed dial (Students) */
+.fab-overlay {
+  display: none;
+}
+.fab-speed-dial {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .fab-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 148;
+  }
+  .fab-speed-dial {
+    display: block;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 150;
+  }
+  .fab-speed-dial .fab {
+    position: relative;
+    bottom: auto; right: auto;
+  }
+}
+.fab-options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+  animation: fadeSlideUp 0.18s ease;
+}
+.fab-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.fab-option-primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== CLASSES — dual view ===== */

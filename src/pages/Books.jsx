@@ -5,6 +5,7 @@ import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
 import { EditBtn, DeleteBtn } from '../components/ui/IconBtn.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
+import { Plus } from '@phosphor-icons/react'
 
 const EMOJI_OPTIONS = ['📚','📖','📗','📘','📙','📕','📓','📔','📒','✏️','🖊️','📝']
 const EMPTY_FORM = { name: '', emoji: '📚', classId: '' }
@@ -137,6 +138,11 @@ export default function Books() {
           onCancel={() => setConfirmDelete(null)}
         />
       )}
+
+      {/* FAB — mobile only */}
+      <button className="fab" onClick={openAdd} aria-label={t('books.add')}>
+        <Plus size={22} weight="bold" />
+      </button>
     </Layout>
   )
 }

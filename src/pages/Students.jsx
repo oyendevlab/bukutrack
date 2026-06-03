@@ -5,6 +5,7 @@ import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
 import { EditBtn, DeleteBtn, UploadBtn } from '../components/ui/IconBtn.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
+import { Plus, UploadSimple } from '@phosphor-icons/react'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -26,6 +27,7 @@ export default function Students() {
   const [filterClassId, setFilterClassId] = useState(null)
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
+  const [fabOpen, setFabOpen] = useState(false)
   const csvRef = useRef(null)
 
   const filtered = students
@@ -191,6 +193,26 @@ export default function Students() {
           onCancel={() => setConfirmDelete(null)}
         />
       )}
+
+      {/* FAB speed dial — mobile only */}
+      {fabOpen && <div className="fab-overlay" onClick={() => setFabOpen(false)} />}
+      <div className="fab-speed-dial">
+        {fabOpen && (
+          <div className="fab-options">
+            <button className="fab-option" onClick={() => { setFabOpen(false); csvRef.current?.click() }}>
+              <UploadSimple size={18} weight="bold" />
+              <span>{t('students.import')}</span>
+            </button>
+            <button className="fab-option fab-option-primary" onClick={() => { setFabOpen(false); openAdd() }}>
+              <Plus size={18} weight="bold" />
+              <span>{t('students.add')}</span>
+            </button>
+          </div>
+        )}
+        <button className={`fab${fabOpen ? ' fab-open' : ''}`} onClick={() => setFabOpen(o => !o)} aria-label="Tindakan">
+          <Plus size={22} weight="bold" style={{ transition: 'transform 0.2s', transform: fabOpen ? 'rotate(45deg)' : 'none' }} />
+        </button>
+      </div>
     </Layout>
   )
 }

@@ -4,6 +4,7 @@ import { QRCodeCanvas } from 'qrcode.react'
 import Layout from '../components/layout/Layout.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
+import { Printer } from '@phosphor-icons/react'
 
 function QRCard({ student, className, onDownload }) {
   return (
@@ -110,6 +111,10 @@ export default function QRPrint() {
           </div>
         </>
       )}
+      {/* FAB print — mobile only */}
+      <button className="fab no-print" onClick={() => window.print()} aria-label={t('qrPrint.printAll')}>
+        <Printer size={22} weight="bold" />
+      </button>
     </Layout>
   )
 }
