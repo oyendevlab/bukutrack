@@ -63,47 +63,77 @@ export default function Classes() {
           <button className="btn btn-primary" style={{ marginTop: '12px' }} onClick={openAdd}>+ {t('classes.add')}</button>
         </div>
       ) : (
-        <div className="card">
-          <div className="card-header">
-            <div className="card-title">{t('classes.title')}</div>
-            <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>{classes.length} kelas</span>
+        <>
+          {/* Desktop: table view */}
+          <div className="card class-table-desktop">
+            <div className="card-header">
+              <div className="card-title">{t('classes.title')}</div>
+              <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>{classes.length} kelas</span>
+            </div>
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{t('classes.subject')}</th>
+                    <th>{t('classes.yearClass')}</th>
+                    <th>Murid</th>
+                    <th>Warna</th>
+                    <th>{t('common.actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {classes.map((cls, i) => {
+                    const count = students.filter(s => s.class_id === cls.id).length
+                    const hex = CLASS_COLORS.find(c => c.value === cls.color)?.hex || '#6b8fd4'
+                    return (
+                      <tr key={cls.id}>
+                        <td style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--ink3)' }}>{String(i + 1).padStart(2, '0')}</td>
+                        <td style={{ fontWeight: 700 }}>{cls.subject}</td>
+                        <td><span className="tag tag-ink">{cls.year_name}</span></td>
+                        <td style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{count}</td>
+                        <td><div style={{ width: 16, height: 16, borderRadius: '50%', background: hex, border: '2px solid var(--rule)' }} /></td>
+                        <td>
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <EditBtn onClick={() => openEdit(cls)} />
+                            <DeleteBtn onClick={() => setConfirmDelete(cls)} />
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div className="table-wrap">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>{t('classes.subject')}</th>
-                  <th>{t('classes.yearClass')}</th>
-                  <th>Murid</th>
-                  <th>Warna</th>
-                  <th>{t('common.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {classes.map((cls, i) => {
-                  const count = students.filter(s => s.class_id === cls.id).length
-                  const hex = CLASS_COLORS.find(c => c.value === cls.color)?.hex || '#6b8fd4'
-                  return (
-                    <tr key={cls.id}>
-                      <td style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--ink3)' }}>{String(i + 1).padStart(2, '0')}</td>
-                      <td style={{ fontWeight: 700 }}>{cls.subject}</td>
-                      <td><span className="tag tag-ink">{cls.year_name}</span></td>
-                      <td style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{count}</td>
-                      <td><div style={{ width: 16, height: 16, borderRadius: '50%', background: hex, border: '2px solid var(--rule)' }} /></td>
-                      <td>
-                        <div style={{ display: 'flex', gap: '6px' }}>
-                          <EditBtn onClick={() => openEdit(cls)} />
-                          <DeleteBtn onClick={() => setConfirmDelete(cls)} />
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+
+          {/* Mobile: card list */}
+          <div className="class-card-list">
+            {classes.map((cls) => {
+              const count = students.filter(s => s.class_id === cls.id).length
+              const hex = CLASS_COLORS.find(c => c.value === cls.color)?.hex || '#6b8fd4'
+              return (
+                <div key={cls.id} className="class-card-row" style={{ '--cls-color': hex }}>
+                  <div className="class-card-color-bar" />
+                  <div className="class-card-info">
+                    <div className="class-card-subject">{cls.subject}</div>
+                    <div className="class-card-meta">
+                      <span className="tag tag-ink">{cls.year_name}</span>
+                      <span className="class-card-count">{count} murid</span>
+                    </div>
+                  </div>
+                  <div className="class-card-actions">
+                    <EditBtn onClick={() => openEdit(cls)} />
+                    <DeleteBtn onClick={() => setConfirmDelete(cls)} />
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        </div>
+
+          {/* FAB tambah kelas — mobile only */}
+          <button className="fab" onClick={openAdd} aria-label={t('classes.add')}>+</button>
+        </>
       )}
 
       {showModal && (

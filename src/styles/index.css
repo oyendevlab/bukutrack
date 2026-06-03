@@ -714,3 +714,80 @@ body {
 }
 .bottom-nav-center:active { transform: scale(0.93); }
 .bottom-nav-center.active { box-shadow: 0 4px 20px rgba(59,130,246, 0.6); }
+
+/* ===== FAB (Floating Action Button) ===== */
+.fab {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.4);
+    z-index: 150;
+    transition: transform 0.15s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fab:active { transform: scale(0.92); }
+}
+
+/* ===== CLASSES — dual view ===== */
+/* Desktop: tunjuk table, sembunyi card list */
+.class-table-desktop { display: block; }
+.class-card-list { display: none; }
+
+@media (max-width: 1023px) {
+  .class-table-desktop { display: none; }
+  .class-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.class-card-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 14px 14px 14px 0;
+  box-shadow: 0 2px 8px rgba(100,140,200,0.06);
+  overflow: hidden;
+}
+
+.class-card-color-bar {
+  width: 5px;
+  align-self: stretch;
+  background: var(--cls-color, var(--accent));
+  border-radius: 0 3px 3px 0;
+  flex-shrink: 0;
+}
+
+.class-card-info { flex: 1; min-width: 0; }
+.class-card-subject {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+.class-card-meta { display: flex; align-items: center; gap: 8px; }
+.class-card-count { font-size: 11px; color: var(--ink3); font-family: var(--font-mono); }
+.class-card-actions { display: flex; gap: 6px; flex-shrink: 0; padding-right: 4px; }
