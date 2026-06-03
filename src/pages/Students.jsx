@@ -2,17 +2,13 @@ import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
-import { EditBtn, DeleteBtn, UploadBtn } from '../components/ui/IconBtn.jsx'
+import { EditBtn, DeleteBtn } from '../components/ui/IconBtn.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
 import { Plus, UploadSimple } from '@phosphor-icons/react'
+import { QRCodeCanvas } from 'qrcode.react'
 
-function getInitials(name) {
-  if (!name) return '?'
-  return name.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase()
-}
-
-const EMPTY_FORM = { name: '', classId: '', studentNo: '' }
+const EMPTY_FORM = { name: '', classId: '' }
 
 export default function Students() {
   const { t } = useTranslation()
@@ -43,7 +39,7 @@ export default function Students() {
 
   function openEdit(s) {
     setEditTarget(s)
-    setForm({ name: s.name, classId: s.class_id, studentNo: s.student_no || '' })
+    setForm({ name: s.name, classId: s.class_id })
     setError('')
     setShowModal(true)
   }
@@ -53,9 +49,9 @@ export default function Students() {
     if (!form.classId) { setError('Sila pilih kelas.'); return }
     setSaving(true)
     if (editTarget) {
-      await updateStudent(editTarget.id, { name: form.name.trim(), class_id: form.classId, student_no: form.studentNo.trim() })
+      await updateStudent(editTarget.id, { name: form.name.trim(), class_id: form.classId })
     } else {
-      await addStudent(form.name.trim(), form.classId, form.studentNo.trim())
+      await addStudent(form.name.trim(), form.classId)
     }
     setSaving(false)
     setShowModal(false)
@@ -111,47 +107,64 @@ export default function Students() {
       {loading ? (
         <div style={{ textAlign: 'center', padding: '40px', color: 'var(--ink3)' }}>{t('common.loading')}</div>
       ) : (
-        <div className="card">
-          <div className="card-header">
-            <div className="card-title">{t('students.title')}</div>
-            <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>
-              {filtered.length} / {students.length} murid
-            </span>
-          </div>
-          <div className="table-wrap">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>{t('students.name')}</th>
-                  <th>{t('students.studentNo')}</th>
-                  <th>{t('students.class')}</th>
-                  <th>QR</th>
-                  <th>{t('common.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.length === 0 ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: 'var(--ink3)', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>— {t('students.noStudents')} —</td></tr>
-                ) : filtered.map((s, i) => (
-                  <tr key={s.id}>
-                    <td style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--ink3)' }}>{String(i + 1).padStart(2, '0')}</td>
-                    <td><div className="s-name"><div className="s-init">{getInitials(s.name)}</div>{s.name}</div></td>
-                    <td style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--ink3)' }}>{s.student_no || '—'}</td>
-                    <td><span className="tag tag-ink">{getClassName(s.class_id)}</span></td>
-                    <td style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--ink3)' }}>{s.qr_code?.slice(0, 8)}…</td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '6px' }}>
-                        <EditBtn onClick={() => openEdit(s)} />
-                        <DeleteBtn onClick={() => setConfirmDelete(s)} />
-                      </div>
-                    </td>
+        <>
+          {/* Desktop: table */}
+          <div className="card class-table-desktop">
+            <div className="card-header">
+              <div className="card-title">{t('students.title')}</div>
+              <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>
+                {filtered.length} / {students.length} murid
+              </span>
+            </div>
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{t('students.name')}</th>
+                    <th>{t('students.class')}</th>
+                    <th>{t('common.actions')}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filtered.length === 0 ? (
+                    <tr><td colSpan={4} style={{ textAlign: 'center', padding: '24px', color: 'var(--ink3)', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>— {t('students.noStudents')} —</td></tr>
+                  ) : filtered.map((s, i) => (
+                    <tr key={s.id}>
+                      <td style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--ink3)' }}>{String(i + 1).padStart(2, '0')}</td>
+                      <td style={{ fontWeight: 600 }}>{s.name}</td>
+                      <td><span className="tag tag-ink">{getClassName(s.class_id)}</span></td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <EditBtn onClick={() => openEdit(s)} />
+                          <DeleteBtn onClick={() => setConfirmDelete(s)} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile: card list */}
+          <div className="class-card-list">
+            {filtered.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '32px', color: 'var(--ink3)', fontSize: '13px' }}>— {t('students.noStudents')} —</div>
+            ) : filtered.map((s) => (
+              <div key={s.id} className="student-card-row">
+                <div className="student-card-info">
+                  <div className="student-card-name">{s.name}</div>
+                  <span className="tag tag-ink">{getClassName(s.class_id)}</span>
+                </div>
+                <div className="class-card-actions">
+                  <EditBtn onClick={() => openEdit(s)} />
+                  <DeleteBtn onClick={() => setConfirmDelete(s)} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {showModal && (
@@ -169,14 +182,20 @@ export default function Students() {
               <label className="input-label">{t('students.name')}</label>
               <input className="input" placeholder="Nama penuh murid" value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-              <label className="input-label">{t('students.studentNo')} <span style={{ color: 'var(--ink3)', fontWeight: 400 }}>(pilihan)</span></label>
-              <input className="input" placeholder="cth: 001" value={form.studentNo}
-                onChange={e => setForm(f => ({ ...f, studentNo: e.target.value }))} />
               <label className="input-label">{t('students.class')}</label>
               <select className="input" value={form.classId} onChange={e => setForm(f => ({ ...f, classId: e.target.value }))}>
                 <option value="">— Pilih Kelas —</option>
                 {classes.map(c => <option key={c.id} value={c.id}>{c.subject} · {c.year_name}</option>)}
               </select>
+              {editTarget?.qr_code && (
+                <div className="modal-qr-section">
+                  <div className="input-label" style={{ marginBottom: '10px' }}>Kod QR</div>
+                  <div className="modal-qr-box">
+                    <QRCodeCanvas value={editTarget.qr_code} size={120} level="M" includeMargin={false} />
+                    <div className="modal-qr-name">{editTarget.name}</div>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="modal-foot">
               <button className="btn btn-ghost" onClick={() => setShowModal(false)} disabled={saving}>{t('common.cancel')}</button>

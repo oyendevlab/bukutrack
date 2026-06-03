@@ -939,3 +939,31 @@ body {
 .class-card-meta { display: flex; align-items: center; gap: 8px; }
 .class-card-count { font-size: 11px; color: var(--ink3); font-family: var(--font-mono); }
 .class-card-actions { display: flex; gap: 6px; flex-shrink: 0; padding-right: 4px; }
+
+/* ===== STUDENTS — mobile card list ===== */
+.student-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 12px 14px;
+  box-shadow: 0 2px 8px rgba(100,140,200,0.06);
+}
+.student-card-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+.student-card-name { font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ===== MODAL QR ===== */
+.modal-qr-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.modal-qr-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: var(--surface2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+}
+.modal-qr-name { font-size: 12px; font-weight: 600; color: var(--ink2); }
