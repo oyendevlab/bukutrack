@@ -58,14 +58,16 @@ export default function Books() {
       actions={<button className="btn btn-primary btn-sm" onClick={openAdd}>+ {t('books.add')}</button>}
     >
       <div className="filter-bar">
-        <div className={`filter-chip${!filterClassId ? ' active' : ''}`} onClick={() => setFilterClassId(null)}>
-          {t('books.allClasses')}
-        </div>
-        {classes.map(cls => (
-          <div key={cls.id} className={`filter-chip${filterClassId === cls.id ? ' active' : ''}`}
-            onClick={() => setFilterClassId(cls.id)}>{cls.year_name}
-          </div>
-        ))}
+        <select
+          className="filter-select"
+          value={filterClassId || ''}
+          onChange={e => setFilterClassId(e.target.value || null)}
+        >
+          <option value="">{t('books.allClasses')}</option>
+          {classes.map(cls => (
+            <option key={cls.id} value={cls.id}>{cls.year_name}</option>
+          ))}
+        </select>
       </div>
 
       {loading ? (
