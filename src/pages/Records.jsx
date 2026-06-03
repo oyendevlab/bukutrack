@@ -1,141 +1,188 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
-import useRecords from '../hooks/useRecords.jsx'
+import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
+import { useAppContext } from '../context/AppContext.jsx'
+import { useClasses } from '../hooks/useClasses.jsx'
+import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
-import { useSubmissions } from '../hooks/useSubmissions.jsx'
-import StudentRecordsTable from '../components/features/records/StudentRecordsTable.jsx'
-import BookRecordsTable from '../components/features/records/BookRecordsTable.jsx'
-import { exportToExcel, exportToCsv, exportToPdf } from '../lib/export.js'
+import { CheckCircle, XCircle, NotePencil, Trash, CaretDown, CaretUp } from '@phosphor-icons/react'
+
+function formatDate(dateStr) {
+  if (!dateStr) return '—'
+  return new Date(dateStr).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' })
+}
 
 export default function Records() {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState('student')
-
-  const {
-    filterClassId, setFilterClassId,
-    filterStatus, setFilterStatus,
-    filterSearch, setFilterSearch,
-    studentRecords, bookRecords,
-    classes, loading,
-    totalStudents, totalComplete, totalIncomplete,
-  } = useRecords()
-
+  const { sessions, sessionRecords, updateSessionNote, deleteSession } = useAppContext()
+  const { classes } = useClasses()
+  const { students } = useStudents()
   const { books } = useBooks()
-  const { toggleSubmission } = useSubmissions()
 
-  const STATUS_LABELS = {
-    all: t('common.all'),
-    complete: t('records.complete'),
-    partial: t('records.partial'),
-    none: t('records.none'),
+  const [filterClassId, setFilterClassId] = useState(null)
+  const [expandedId, setExpandedId] = useState(null)
+  const [editingNote, setEditingNote] = useState(null)
+  const [confirmDelete, setConfirmDelete] = useState(null)
+
+  const filtered = sessions.filter(s => !filterClassId || s.class_id === filterClassId)
+
+  function getRecords(sessionId) {
+    return sessionRecords.filter(r => r.session_id === sessionId)
   }
 
-  const activeClassName = filterClassId
-    ? (classes.find(c => c.id === filterClassId)?.year_name || 'Semua Kelas')
-    : 'Semua Kelas'
+  function getStudent(id) {
+    return students.find(s => s.id === id)
+  }
+
+  async function handleSaveNote() {
+    if (!editingNote) return
+    await updateSessionNote(editingNote.sessionId, editingNote.studentId, editingNote.note)
+    setEditingNote(null)
+  }
 
   return (
     <Layout title={t('records.title')} breadcrumb={t('records.title')}>
-      {/* Stats strip */}
-      <div className="stats-strip">
-        <div className="stat-cell" style={{ '--sc': 'var(--ink)' }}>
-          <div className="stat-label">{t('records.totalStudents')}</div>
-          <div className="stat-num">{totalStudents}</div>
-        </div>
-        <div className="stat-cell" style={{ '--sc': 'var(--green)' }}>
-          <div className="stat-label">{t('records.complete')}</div>
-          <div className="stat-num">{totalComplete}</div>
-          <div className="stat-note">{totalStudents ? Math.round((totalComplete / totalStudents) * 100) : 0}%</div>
-        </div>
-        <div className="stat-cell" style={{ '--sc': 'var(--amber)' }}>
-          <div className="stat-label">{t('records.incomplete')}</div>
-          <div className="stat-num">{totalIncomplete}</div>
-          <div className="stat-note">{totalStudents ? Math.round((totalIncomplete / totalStudents) * 100) : 0}%</div>
-        </div>
+
+      <div className="filter-bar" style={{ marginBottom: '16px' }}>
+        <select className="filter-select" value={filterClassId || ''}
+          onChange={e => setFilterClassId(e.target.value || null)}>
+          <option value="">Semua Kelas</option>
+          {classes.map(c => <option key={c.id} value={c.id}>{c.year_name}</option>)}
+        </select>
+        <span style={{ marginLeft: 'auto', fontSize: '11px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>
+          {filtered.length} sesi
+        </span>
       </div>
 
-      {/* Filter bar */}
-      <div className="filter-bar">
-        <div
-          className={`filter-chip${!filterClassId ? ' active' : ''}`}
-          onClick={() => setFilterClassId(null)}
-        >
-          {t('records.allClasses') || 'Semua Kelas'}
+      {filtered.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--ink3)' }}>
+          <div style={{ fontSize: '32px', opacity: 0.2, marginBottom: '12px' }}>📋</div>
+          <div style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', letterSpacing: '1px' }}>
+            Tiada sesi semakan
+          </div>
+          <div style={{ fontSize: '12px', marginTop: '6px' }}>Mula imbas QR untuk cipta sesi pertama</div>
         </div>
-        {classes.map(cls => (
-          <div
-            key={cls.id}
-            className={`filter-chip${filterClassId === cls.id ? ' active' : ''}`}
-            onClick={() => setFilterClassId(cls.id)}
-          >
-            {cls.year_name}
-          </div>
-        ))}
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {filtered.map(session => {
+            const isExpanded = expandedId === session.id
+            const records = getRecords(session.id)
+            const presentCount = records.filter(r => r.status === 'present').length
+            const absentCount = records.filter(r => r.status === 'absent').length
+            const cls = classes.find(c => c.id === session.class_id)
+            const book = session.books || books.find(b => b.id === session.book_id)
 
-        {Object.entries(STATUS_LABELS).map(([s, label]) => (
-          <div
-            key={s}
-            className={`filter-chip${filterStatus === s ? ' active' : ''}`}
-            onClick={() => setFilterStatus(s)}
-          >
-            {label}
-          </div>
-        ))}
+            return (
+              <div key={session.id} className="session-card">
+                <div className="session-card-header"
+                  onClick={() => setExpandedId(isExpanded ? null : session.id)}>
+                  <div className="session-card-left">
+                    <div className="session-card-date">{formatDate(session.checked_at)}</div>
+                    <div className="session-card-meta">
+                      <span className="tag tag-ink">{cls?.year_name || session.classes?.year_name}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--ink2)' }}>
+                        {book?.emoji} {book?.name}
+                      </span>
+                    </div>
+                    {session.notes && (
+                      <div style={{ fontSize: '11px', color: 'var(--ink3)', marginTop: '3px' }}>
+                        📝 {session.notes}
+                      </div>
+                    )}
+                  </div>
+                  <div className="session-card-right">
+                    <div className="session-stat green">
+                      <CheckCircle size={13} weight="fill" />{presentCount}
+                    </div>
+                    <div className="session-stat red">
+                      <XCircle size={13} weight="fill" />{absentCount}
+                    </div>
+                    {isExpanded ? <CaretUp size={14} /> : <CaretDown size={14} />}
+                  </div>
+                </div>
 
-        <input
-          className="filter-input"
-          placeholder={t('records.search')}
-          value={filterSearch}
-          onChange={e => setFilterSearch(e.target.value)}
+                {isExpanded && (
+                  <div className="session-card-body">
+                    {records.length === 0 ? (
+                      <div style={{ padding: '16px', textAlign: 'center', fontSize: '12px', color: 'var(--ink3)' }}>
+                        Tiada rekod murid
+                      </div>
+                    ) : (
+                      <>
+                        {records.filter(r => r.status === 'present').map(r => {
+                          const stu = getStudent(r.student_id)
+                          return (
+                            <div key={r.id} className="session-record-row present">
+                              <CheckCircle size={15} weight="fill" color="var(--green)" />
+                              <span className="session-record-name">{stu?.name || '—'}</span>
+                              {r.scanned_at && (
+                                <span className="session-record-time">
+                                  {new Date(r.scanned_at).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              )}
+                            </div>
+                          )
+                        })}
+                        {records.filter(r => r.status === 'absent').map(r => {
+                          const stu = getStudent(r.student_id)
+                          const isEditing = editingNote?.sessionId === session.id && editingNote?.studentId === r.student_id
+                          return (
+                            <div key={r.id} className="session-record-row absent">
+                              <XCircle size={15} weight="fill" color="var(--red)" />
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div className="session-record-name">{stu?.name || '—'}</div>
+                                {isEditing ? (
+                                  <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
+                                    <input className="input"
+                                      style={{ flex: 1, fontSize: '12px', padding: '6px 10px', height: '32px' }}
+                                      placeholder="Sebab tidak hadir..."
+                                      value={editingNote.note}
+                                      onChange={e => setEditingNote(n => ({ ...n, note: e.target.value }))}
+                                      autoFocus
+                                    />
+                                    <button className="btn btn-primary btn-sm" onClick={handleSaveNote}>✓</button>
+                                    <button className="btn btn-ghost btn-sm" onClick={() => setEditingNote(null)}>✕</button>
+                                  </div>
+                                ) : r.note ? (
+                                  <div style={{ fontSize: '11px', color: 'var(--ink3)', marginTop: '2px' }}>
+                                    📝 {r.note}
+                                  </div>
+                                ) : null}
+                              </div>
+                              {!isEditing && (
+                                <button className="btn btn-ghost btn-sm"
+                                  style={{ padding: '4px 8px', flexShrink: 0 }}
+                                  onClick={() => setEditingNote({ sessionId: session.id, studentId: r.student_id, note: r.note || '' })}>
+                                  <NotePencil size={13} weight="bold" />
+                                </button>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </>
+                    )}
+                    <div style={{ padding: '10px 14px', borderTop: '1px solid var(--rule)', display: 'flex', justifyContent: 'flex-end' }}>
+                      <button className="btn btn-ghost btn-sm" style={{ color: 'var(--red)', gap: '4px' }}
+                        onClick={() => setConfirmDelete(session)}>
+                        <Trash size={13} weight="bold" /> Padam Sesi
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {confirmDelete && (
+        <ConfirmDialog
+          message={`Padam sesi "${formatDate(confirmDelete.checked_at)}"? Semua rekod murid dalam sesi ini akan dipadam.`}
+          onConfirm={async () => { await deleteSession(confirmDelete.id); setConfirmDelete(null) }}
+          onCancel={() => setConfirmDelete(null)}
         />
-
-        <div className="export-group">
-          <button className="export-btn" onClick={() => exportToExcel(studentRecords, books, activeClassName)}>
-            ↓ {t('records.exportExcel')}
-          </button>
-          <button className="export-btn" onClick={() => exportToCsv(studentRecords, books, activeClassName)}>
-            ↓ {t('records.exportCsv')}
-          </button>
-          <button className="export-btn" onClick={() => exportToPdf(studentRecords, books, activeClassName)}>
-            ↓ {t('records.exportPdf')}
-          </button>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="tabs">
-        <button
-          className={`tab${activeTab === 'student' ? ' active' : ''}`}
-          onClick={() => setActiveTab('student')}
-        >
-          {t('records.byStudent')}
-        </button>
-        <button
-          className={`tab${activeTab === 'book' ? ' active' : ''}`}
-          onClick={() => setActiveTab('book')}
-        >
-          {t('records.byBook')}
-        </button>
-      </div>
-
-      {/* Card */}
-      <div className="card">
-        <div className="card-header">
-          <div className="card-title">
-            {activeTab === 'student' ? t('records.byStudent') : t('records.byBook')}
-          </div>
-        </div>
-        <div className="card-body" style={{ padding: 0 }}>
-          {loading ? (
-            <div style={{ padding: '2rem', textAlign: 'center' }}>{t('common.loading')}</div>
-          ) : activeTab === 'student' ? (
-            <StudentRecordsTable studentRecords={studentRecords} books={books} onToggle={toggleSubmission} />
-          ) : (
-            <BookRecordsTable bookRecords={bookRecords} />
-          )}
-        </div>
-      </div>
+      )}
     </Layout>
   )
 }
