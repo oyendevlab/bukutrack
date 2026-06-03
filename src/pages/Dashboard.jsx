@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Users, CheckCircle, WarningCircle, Confetti, ArrowSquareOut, QrCode } from '@phosphor-icons/react'
+import { Users, CalendarCheck, Camera, ArrowSquareOut, QrCode } from '@phosphor-icons/react'
 import Layout from '../components/layout/Layout.jsx'
 import ClassCard from '../components/features/dashboard/ClassCard.jsx'
-import RecentActivity from '../components/features/dashboard/RecentActivity.jsx'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
-import { useSubmissions } from '../hooks/useSubmissions.jsx'
+import { useAppContext } from '../context/AppContext.jsx'
 
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -17,28 +16,20 @@ export default function Dashboard() {
   const { classes, loading: classLoading } = useClasses()
   const { students } = useStudents()
   const { books } = useBooks()
-  const { submissions } = useSubmissions()
+  const { sessions, sessionRecords } = useAppContext()
 
   const today = new Date().toLocaleDateString('ms-MY', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
   })
 
-  // Kira stats global
   const totalStudents = students.length
-  const completeStudents = students.filter(student =>
-    books.filter(b => b.class_id === student.class_id || b.class_id === null).every(book =>
-      submissions.some(s => s.student_id === student.id && s.book_id === book.id)
-    )
-  ).length
-  const incompleteStudents = totalStudents - completeStudents
-
-  const isLoading = classLoading
+  const todayStr = new Date().toISOString().slice(0, 10)
+  const todaySessions = sessions.filter(s => s.checked_at === todayStr)
 
   return (
     <Layout
       title={t('dashboard.title')}
       breadcrumb={`${t('dashboard.allClasses')} · ${today}`}
-      incompleteCount={incompleteStudents}
       actions={
         <>
           <button className="btn btn-ghost btn-sm" onClick={() => navigate('/records')}>
@@ -52,14 +43,7 @@ export default function Dashboard() {
         </>
       }
     >
-      {/* Alert jika ada murid belum lengkap */}
-      {incompleteStudents > 0 && (
-        <div className="alert alert-warn">
-          ▲ &nbsp;<strong>{incompleteStudents} {t('dashboard.incomplete').toLowerCase()}</strong> — {t('dashboard.needAction')}
-        </div>
-      )}
-
-      {/* Overview Stats — Bento */}
+      {/* Bento stats */}
       <div className="bento-stats">
         <div className="bento-cell" style={{ '--bc': 'var(--accent)' }}>
           <div className="bento-top">
@@ -71,30 +55,25 @@ export default function Dashboard() {
         </div>
         <div className="bento-cell" style={{ '--bc': 'var(--green)' }}>
           <div className="bento-top">
-            <CheckCircle size={22} weight="duotone" color="var(--green)" />
+            <CalendarCheck size={22} weight="duotone" color="var(--green)" />
             <span className="bento-tag" style={{ color: 'var(--green)', background: 'var(--green-bg)' }}>
-              {totalStudents > 0 ? ((completeStudents / totalStudents) * 100).toFixed(0) : 0}%
+              {todaySessions.length} hari ini
             </span>
           </div>
-          <div className="bento-num" style={{ color: 'var(--green)' }}>{completeStudents}</div>
-          <div className="bento-label">{t('dashboard.completeAll')}</div>
+          <div className="bento-num" style={{ color: 'var(--green)' }}>{sessions.length}</div>
+          <div className="bento-label">Jumlah Sesi</div>
         </div>
-        <div className="bento-cell" style={{ '--bc': incompleteStudents > 0 ? 'var(--red)' : 'var(--green)' }}>
+        <div className="bento-cell" style={{ '--bc': 'var(--accent)' }}>
           <div className="bento-top">
-            {incompleteStudents > 0
-              ? <WarningCircle size={22} weight="duotone" color="var(--red)" />
-              : <Confetti size={22} weight="duotone" color="var(--green)" />}
-            <span className="bento-tag" style={{ color: incompleteStudents > 0 ? 'var(--red)' : 'var(--green)', background: incompleteStudents > 0 ? 'var(--red-bg)' : 'var(--green-bg)' }}>
-              {totalStudents > 0 ? ((incompleteStudents / totalStudents) * 100).toFixed(0) : 0}%
-            </span>
+            <Camera size={22} weight="duotone" color="var(--accent)" />
           </div>
-          <div className="bento-num" style={{ color: incompleteStudents > 0 ? 'var(--red)' : 'var(--ink3)' }}>{incompleteStudents}</div>
-          <div className="bento-label">{t('dashboard.incomplete')}</div>
+          <div className="bento-num">{todaySessions.length}</div>
+          <div className="bento-label">Sesi Hari Ini</div>
         </div>
       </div>
 
       {/* Class Cards */}
-      {isLoading ? (
+      {classLoading ? (
         <div style={{ textAlign: 'center', padding: '40px', color: 'var(--ink3)', fontSize: '13px' }}>
           {t('common.loading')}
         </div>
@@ -122,17 +101,13 @@ export default function Dashboard() {
                 cls={cls}
                 students={students}
                 books={books}
-                submissions={submissions}
+                sessions={sessions}
+                sessionRecords={sessionRecords}
                 onClick={(id) => navigate(`/class/${id}`)}
               />
             ))}
           </div>
         </>
-      )}
-
-      {/* Recent Activity */}
-      {submissions.length > 0 && (
-        <RecentActivity submissions={submissions} />
       )}
     </Layout>
   )

@@ -697,6 +697,39 @@ body {
 .modal-foot { padding:12px 22px;border-top:1px solid var(--rule);display:flex;gap:8px; }
 .modal-foot .btn { flex:1;justify-content:center; }
 
+/* ===== CLASS CARD — sesi terkini ===== */
+.cc-last-session {
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--rule);
+  background: var(--surface2);
+}
+.cc-last-session-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 4px;
+}
+.cc-last-session-book {
+  font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px;
+}
+.cc-last-session-stats {
+  display: flex; align-items: center; gap: 12px;
+}
+.cc-attendance {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 700;
+}
+.cc-attendance.green { color: var(--green); }
+.cc-attendance.red { color: var(--red); }
+.cc-last-session-note {
+  font-size: 10px; color: var(--ink3); margin-top: 4px;
+}
+.cc-no-session {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px; color: var(--ink3);
+}
+
 /* ===== SCAN — sesi ===== */
 .scan-session-title { font-family: var(--font-heading); font-size: 16px; letter-spacing: 1.5px; color: var(--ink); margin-bottom: 16px; text-transform: uppercase; }
 .scan-session-info { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
