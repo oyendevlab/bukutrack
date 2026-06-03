@@ -12,6 +12,8 @@
     "settings": "Tetapan",
     "main": "UTAMA",
     "management": "PENGURUSAN",
+    "managementNav": "Pengurusan",
+    "recordsNav": "Rekod",
     "info": "MAKLUMAT",
     "account": "AKAUN"
   },

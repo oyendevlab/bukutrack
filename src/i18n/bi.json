@@ -12,6 +12,8 @@
     "settings": "Settings",
     "main": "MAIN",
     "management": "MANAGEMENT",
+    "managementNav": "Management",
+    "recordsNav": "Records",
     "info": "INFO",
     "account": "ACCOUNT"
   },

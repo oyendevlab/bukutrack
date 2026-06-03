@@ -45,7 +45,7 @@ export default function BottomNav({ incompleteCount = 0 }) {
       {/* Bottom sheet drawer */}
       <div className={`mgmt-sheet${mgmtOpen ? ' open' : ''}`}>
         <div className="mgmt-sheet-handle" />
-        <div className="mgmt-sheet-title">{t('nav.management')}</div>
+        <div className="mgmt-sheet-title">{t('nav.managementNav')}</div>
         <div className="mgmt-sheet-list">
           {MGMT_ITEMS.map(item => {
             const isActive = location.pathname.startsWith(item.path)
@@ -85,7 +85,7 @@ export default function BottomNav({ incompleteCount = 0 }) {
           <span className="bottom-nav-icon">
             <Chalkboard size={22} weight={isMgmtActive ? 'fill' : 'regular'} />
           </span>
-          <span className="bottom-nav-label">{t('nav.management')}</span>
+          <span className="bottom-nav-label">{t('nav.managementNav')}</span>
         </button>
 
         <button
@@ -103,7 +103,7 @@ export default function BottomNav({ incompleteCount = 0 }) {
             <ClipboardText size={22} weight={location.pathname.startsWith('/records') ? 'fill' : 'regular'} />
             {incompleteCount > 0 && <span className="bottom-nav-dot" />}
           </span>
-          <span className="bottom-nav-label">{t('nav.records')}</span>
+          <span className="bottom-nav-label">{t('nav.recordsNav')}</span>
         </button>
 
         <button
