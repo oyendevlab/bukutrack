@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx'
+import { AppProvider } from './context/AppContext.jsx'
 
 const Login = lazy(() => import('./pages/Login.jsx'))
 const Register = lazy(() => import('./pages/Register.jsx'))
@@ -57,7 +58,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRoutes />
+        <AppProvider>
+          <AppRoutes />
+        </AppProvider>
       </AuthProvider>
     </BrowserRouter>
   )
