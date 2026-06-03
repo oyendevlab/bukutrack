@@ -94,14 +94,18 @@ export default function Students() {
       }
     >
       <div className="filter-bar">
-        <div className={`filter-chip${!filterClassId ? ' active' : ''}`} onClick={() => setFilterClassId(null)}>{t('common.all')}</div>
-        {classes.map(cls => (
-          <div key={cls.id} className={`filter-chip${filterClassId === cls.id ? ' active' : ''}`} onClick={() => setFilterClassId(cls.id)}>
-            {cls.year_name}
-          </div>
-        ))}
+        <select
+          className="filter-select"
+          value={filterClassId || ''}
+          onChange={e => setFilterClassId(e.target.value || null)}
+        >
+          <option value="">{t('common.all')}</option>
+          {classes.map(cls => (
+            <option key={cls.id} value={cls.id}>{cls.year_name}</option>
+          ))}
+        </select>
         <input className="filter-input" placeholder={t('students.search')} value={search}
-          onChange={e => setSearch(e.target.value)} style={{ marginLeft: 'auto' }} />
+          onChange={e => setSearch(e.target.value)} />
       </div>
 
       {loading ? (
@@ -158,15 +162,14 @@ export default function Students() {
             <div className="student-col-labels">
               <span>Nama</span>
               <span>Kelas</span>
+              <span></span>
             </div>
             {filtered.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '32px', color: 'var(--ink3)', fontSize: '13px' }}>— {t('students.noStudents')} —</div>
             ) : filtered.map((s) => (
               <div key={s.id} className="student-card-row">
-                <div className="student-card-info">
-                  <div className="student-card-name">{s.name}</div>
-                  <span className="tag tag-ink">{getClassName(s.class_id)}</span>
-                </div>
+                <div className="student-card-name">{s.name}</div>
+                <span className="tag tag-ink student-card-class">{getClassName(s.class_id)}</span>
                 <div className="class-card-actions">
                   <EditBtn onClick={() => openEdit(s)} />
                   <DeleteBtn onClick={() => setConfirmDelete(s)} />
