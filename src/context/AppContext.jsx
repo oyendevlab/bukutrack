@@ -17,7 +17,7 @@ export function AppProvider({ children }) {
   const fetchAll = useCallback(async () => {
     if (!user) return
     setLoading(true)
-    const [clsRes, stuRes, bkRes, sesRes] = await Promise.all([
+    const [clsRes, stuRes, bkRes, sesRes, recRes] = await Promise.all([
       supabase.from('classes').select('*').eq('teacher_id', user.id).order('created_at', { ascending: true }),
       supabase.from('students').select('*').eq('teacher_id', user.id).order('name', { ascending: true }),
       supabase.from('books').select('*').eq('teacher_id', user.id).order('created_at', { ascending: true }),
@@ -27,22 +27,13 @@ export function AppProvider({ children }) {
         .order('checked_at', { ascending: false })
         .order('created_at', { ascending: false })
         .limit(100),
+      supabase.from('session_records').select('*'),
     ])
-    const sesData = sesRes.data || []
     setClasses(clsRes.data || [])
     setStudents(stuRes.data || [])
     setBooks(bkRes.data || [])
-    setSessions(sesData)
-
-    if (sesData.length > 0) {
-      const { data: recData } = await supabase
-        .from('session_records')
-        .select('*')
-        .in('session_id', sesData.map(s => s.id))
-      setSessionRecords(recData || [])
-    } else {
-      setSessionRecords([])
-    }
+    setSessions(sesRes.data || [])
+    setSessionRecords(recRes.data || [])
     setLoading(false)
   }, [user])
 
