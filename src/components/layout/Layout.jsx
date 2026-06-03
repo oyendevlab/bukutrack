@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Sidebar from './Sidebar.jsx'
 import Topbar from './Topbar.jsx'
+import BottomNav from './BottomNav.jsx'
 
 export default function Layout({ title, breadcrumb, actions, children, incompleteCount }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)       // mobile slide-in
@@ -42,6 +43,7 @@ export default function Layout({ title, breadcrumb, actions, children, incomplet
           {children}
         </div>
       </div>
+      <BottomNav incompleteCount={incompleteCount} />
     </div>
   )
 }

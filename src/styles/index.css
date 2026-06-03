@@ -631,3 +631,86 @@ body {
 .bci-date.none { color:var(--red); }
 .modal-foot { padding:12px 22px;border-top:1px solid var(--rule);display:flex;gap:8px; }
 .modal-foot .btn { flex:1;justify-content:center; }
+
+/* ===== BOTTOM NAV (mobile only) ===== */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .bottom-nav {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: var(--surface);
+    border-top: 1px solid var(--rule);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    z-index: 200;
+    padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Tambah ruang bawah content supaya tak tersembunyi */
+  .content { padding-bottom: 80px !important; }
+
+  /* Sembunyikan hamburger pada mobile */
+  .hamburger-desktop { display: none !important; }
+  .topbar-divider { display: none; }
+
+  /* Sembunyikan topbar actions pada mobile */
+  .topbar-actions-desktop { display: none !important; }
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink3);
+  padding: 6px 4px;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav-item:active { opacity: 0.7; }
+.bottom-nav-item.active { color: var(--accent); }
+
+.bottom-nav-icon { position: relative; display: flex; }
+.bottom-nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.3px; line-height: 1; }
+
+/* Dot badge untuk rekod */
+.bottom-nav-dot {
+  position: absolute;
+  top: -2px; right: -4px;
+  width: 7px; height: 7px;
+  background: var(--red);
+  border-radius: 50%;
+  border: 1.5px solid var(--surface);
+}
+
+/* Butang kamera tengah — menonjol */
+.bottom-nav-center {
+  flex-shrink: 0;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(59,130,246, 0.45);
+  margin: 0 8px;
+  margin-bottom: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav-center:active { transform: scale(0.93); }
+.bottom-nav-center.active { box-shadow: 0 4px 20px rgba(59,130,246, 0.6); }
