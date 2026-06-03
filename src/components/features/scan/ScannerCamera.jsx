@@ -8,7 +8,6 @@ export default function ScannerCamera({ onScan, active }) {
 
   useEffect(() => {
     if (!active) { stopScanner(); return }
-    // Delay kecil supaya DOM render sepenuhnya sebelum scanner cuba akses div#qr-reader
     const timer = setTimeout(startScanner, 150)
     return () => { clearTimeout(timer); stopScanner() }
   }, [active])
@@ -23,7 +22,7 @@ export default function ScannerCamera({ onScan, active }) {
       scannerRef.current = scanner
       await scanner.start(
         { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 200, height: 200 } },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
         (decoded) => onScan(decoded),
         () => {}
       )
@@ -45,35 +44,45 @@ export default function ScannerCamera({ onScan, active }) {
     setStarted(false)
   }
 
+  if (error) {
+    return (
+      <div className="qr-frame" style={{ flexDirection: 'column', gap: '10px', padding: '20px' }}>
+        <Camera size={36} weight="thin" style={{ opacity: 0.3, color: 'var(--ink)' }} />
+        <div style={{ fontSize: '11px', color: 'var(--red)', fontWeight: 600, textAlign: 'center' }}>{error}</div>
+        <button className="btn btn-ghost btn-sm" onClick={() => { setError(''); startScanner() }}>Cuba Semula</button>
+      </div>
+    )
+  }
+
   return (
-    <div>
+    <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto' }}>
+      {/* div#qr-reader sentiasa visible — html5-qrcode inject video ke sini */}
       <div
         id="qr-reader"
         style={{
-          width: '260px', height: '260px', margin: '0 auto',
-          borderRadius: 'var(--radius-card)', overflow: 'hidden',
-          display: started ? 'block' : 'none',
-          background: '#000',
+          width: '280px',
+          height: '280px',
+          borderRadius: 'var(--radius-card)',
+          overflow: 'hidden',
         }}
       />
 
-      {!started && !error && (
-        <div className="qr-frame">
+      {/* Overlay placeholder semasa kamera belum start */}
+      {!started && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          background: 'var(--surface2)',
+          borderRadius: 'var(--radius-card)',
+          border: '2px dashed var(--rule)',
+          pointerEvents: 'none',
+          gap: '8px',
+        }}>
           <div className="qr-corner tl" /><div className="qr-corner tr" />
           <div className="qr-corner bl" /><div className="qr-corner br" />
-          <div className="qr-scan-line" />
-          <div className="qr-icon">
-            <QrCode size={52} weight="thin" />
-            <div style={{ fontSize: '11px', color: 'var(--ink3)', marginTop: '8px' }}>Memuatkan kamera...</div>
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div className="qr-frame" style={{ flexDirection: 'column', gap: '10px', padding: '20px' }}>
-          <Camera size={36} weight="thin" style={{ opacity: 0.3, color: 'var(--ink)' }} />
-          <div style={{ fontSize: '11px', color: 'var(--red)', fontWeight: 600, textAlign: 'center' }}>{error}</div>
-          <button className="btn btn-ghost btn-sm" onClick={startScanner}>Cuba Semula</button>
+          <QrCode size={48} weight="thin" color="var(--ink3)" />
+          <div style={{ fontSize: '11px', color: 'var(--ink3)' }}>Memuatkan kamera...</div>
         </div>
       )}
     </div>
