@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth.jsx'
 import { useLanguage } from '../hooks/useLanguage.jsx'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { ShieldCheck, Heart } from '@phosphor-icons/react'
 
 export default function Settings() {
   const { teacher, user, signOut } = useAuth()
@@ -64,6 +65,23 @@ export default function Settings() {
                 {language === lang.value && ' ✓'}
               </button>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile only: Privasi & Sokong Pembangun */}
+      <div className="settings-mobile-links">
+        <div className="card" style={{ marginBottom: '16px' }}>
+          <div className="card-header"><div className="card-title">Lain-lain</div></div>
+          <div className="settings-nav-list">
+            <button className="settings-nav-item" onClick={() => navigate('/settings/privacy')}>
+              <ShieldCheck size={18} weight="regular" />
+              <span>{t('nav.privacy')}</span>
+            </button>
+            <button className="settings-nav-item" onClick={() => navigate('/settings/donate')}>
+              <Heart size={18} weight="regular" />
+              <span>{t('nav.donate')}</span>
+            </button>
           </div>
         </div>
       </div>
