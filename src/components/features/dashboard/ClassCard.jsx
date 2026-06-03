@@ -107,17 +107,17 @@ export default function ClassCard({ cls, students, books, sessions, sessionRecor
       )}
 
       {/* Footer CTA */}
-      <div className="cc-footer" style={{ justifyContent: 'space-between' }}>
+      <div className="cc-footer">
         <button
           className="btn btn-primary btn-sm"
-          style={{ fontSize: '11px', padding: '5px 12px' }}
+          style={{ fontSize: '11px', padding: '5px 14px', gap: '5px' }}
           onClick={e => { e.stopPropagation(); navigate('/scan') }}
         >
-          <Camera size={12} weight="bold" /> Sesi Baru
+          <Camera size={13} weight="bold" /> Sesi Baru
         </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <div className="cc-footer-text">{t('dashboard.viewDetail')}</div>
-          <div className="cc-arrow">→</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <span className="cc-footer-text">{t('dashboard.viewDetail')}</span>
+          <span className="cc-arrow">→</span>
         </div>
       </div>
     </div>
