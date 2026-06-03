@@ -289,6 +289,15 @@ body {
   box-shadow: 0 1px 8px rgba(100,140,200,0.06);
 }
 
+@media (max-width: 1023px) {
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+  }
+  /* Tolak content ke bawah supaya tidak tersembunyi di sebalik topbar */
+  .content { padding-top: 70px !important; }
+}
+
 @media (min-width: 640px) { .topbar { padding: 0 24px; gap: 14px; } }
 
 .hamburger {
