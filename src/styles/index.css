@@ -647,6 +647,23 @@ body {
 .scan-center { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
 .scan-box { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-card); padding: 28px 24px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 4px 20px rgba(100,140,200,0.1); }
 .qr-frame { width: 220px; height: 220px; border: 2px dashed var(--rule); border-radius: var(--radius-card); margin: 0 auto; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative; background: var(--surface2); }
+
+/* Force video html5-qrcode render betul pada mobile */
+#qr-reader { overflow: hidden; }
+#qr-reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  position: relative !important;
+}
+#qr-reader > div {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
 .qr-corner { position: absolute; width: 18px; height: 18px; border-color: var(--accent); border-style: solid; border-width: 0; }
 .qr-corner.tl { top:6px;left:6px;border-top-width:3px;border-left-width:3px; }
 .qr-corner.tr { top:6px;right:6px;border-top-width:3px;border-right-width:3px; }
