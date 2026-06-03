@@ -586,38 +586,42 @@ body {
 .view-toggle-btn:not(.active):hover { background: var(--surface2); }
 
 /* ===== PRINT STYLES ===== */
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
 @media print {
-  /* Sembunyikan semua UI kecuali kandungan */
   .no-print,
   .sidebar,
   .sidebar-overlay,
   .topbar,
+  .bottom-nav,
   .filter-bar,
   .alert,
-  .btn { display: none !important; }
+  .btn,
+  .fab { display: none !important; }
 
-  /* Reset main margin */
   .main { margin-left: 0 !important; }
-  .content { padding: 0 !important; }
+  .content { padding: 0 !important; padding-bottom: 0 !important; }
 
-  /* Grid QR untuk cetak — 5 kolum */
+  /* Grid 4 kolum × 5 baris = 20 QR per halaman A4 */
   .qr-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6mm !important;
     page-break-inside: auto;
   }
 
   .qr-card {
     border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px 8px;
+    border-radius: 4px;
+    padding: 6px;
     break-inside: avoid;
     page-break-inside: avoid;
   }
 
-  /* Nama murid lebih besar untuk print */
-  .qr-sname { font-size: 10px; }
-  .qr-sid { font-size: 9px; }
+  .qr-sname { font-size: 9px; }
 
   body { background: white !important; }
 }

@@ -40,6 +40,41 @@ function QRCard({ student, className, onDownload, listView }) {
   )
 }
 
+// Buat canvas komposit: QR + nama + kelas
+function makeCompositeCanvas(qrCanvas, name, className) {
+  const qrSize = qrCanvas.width
+  const padding = 16
+  const nameSize = 15
+  const classSize = 12
+  const gap = 10
+  const totalH = padding + qrSize + gap + nameSize + 4 + classSize + padding
+
+  const offscreen = document.createElement('canvas')
+  offscreen.width = qrSize + padding * 2
+  offscreen.height = totalH
+  const ctx = offscreen.getContext('2d')
+
+  // Latar putih
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, offscreen.width, offscreen.height)
+
+  // QR
+  ctx.drawImage(qrCanvas, padding, padding)
+
+  // Nama
+  ctx.fillStyle = '#111111'
+  ctx.font = `bold ${nameSize}px sans-serif`
+  ctx.textAlign = 'center'
+  ctx.fillText(name, offscreen.width / 2, padding + qrSize + gap + nameSize)
+
+  // Kelas
+  ctx.fillStyle = '#888888'
+  ctx.font = `${classSize}px sans-serif`
+  ctx.fillText(className, offscreen.width / 2, padding + qrSize + gap + nameSize + 4 + classSize)
+
+  return offscreen
+}
+
 export default function QRPrint() {
   const { t } = useTranslation()
   const { students, loading } = useStudents()
@@ -56,16 +91,16 @@ export default function QRPrint() {
   }
 
   const handleDownload = useCallback((student) => {
-    const canvas = document.querySelector(`#qr-${student.id} canvas`)
-    if (!canvas) return
-    const url = canvas.toDataURL('image/png')
+    const qrCanvas = document.querySelector(`#qr-${student.id} canvas`)
+    if (!qrCanvas) return
+    const composite = makeCompositeCanvas(qrCanvas, student.name, getClassName(student.class_id))
     const a = document.createElement('a')
-    a.href = url
+    a.href = composite.toDataURL('image/png')
     a.download = `QR-${student.name.replace(/\s+/g, '-')}.png`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-  }, [])
+  }, [classes])
 
   const handleBulkDownload = useCallback(async () => {
     if (filtered.length === 0) return
@@ -77,9 +112,10 @@ export default function QRPrint() {
     const folder = zip.folder(folderLabel)
 
     for (const student of filtered) {
-      const canvas = document.querySelector(`#qr-${student.id} canvas`)
-      if (!canvas) continue
-      const base64 = canvas.toDataURL('image/png').split(',')[1]
+      const qrCanvas = document.querySelector(`#qr-${student.id} canvas`)
+      if (!qrCanvas) continue
+      const composite = makeCompositeCanvas(qrCanvas, student.name, getClassName(student.class_id))
+      const base64 = composite.toDataURL('image/png').split(',')[1]
       folder.file(`QR-${student.name.replace(/\s+/g, '-')}.png`, base64, { base64: true })
     }
 
