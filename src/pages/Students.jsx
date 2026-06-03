@@ -148,7 +148,17 @@ export default function Students() {
           </div>
 
           {/* Mobile: card list */}
-          <div className="class-card-list">
+          <div className="card student-mobile-card">
+            <div className="card-header">
+              <div className="card-title">{t('students.title')}</div>
+              <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>
+                {filtered.length} / {students.length} murid
+              </span>
+            </div>
+            <div className="student-col-labels">
+              <span>Nama</span>
+              <span>Kelas</span>
+            </div>
             {filtered.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '32px', color: 'var(--ink3)', fontSize: '13px' }}>— {t('students.noStudents')} —</div>
             ) : filtered.map((s) => (

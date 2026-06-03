@@ -954,6 +954,38 @@ body {
 .student-card-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
 .student-card-name { font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* Mobile card wrapper — tersembunyi pada desktop */
+.student-mobile-card { display: none; }
+@media (max-width: 1023px) { .student-mobile-card { display: block; } }
+
+/* Sub-label NAMA / KELAS */
+.student-col-labels {
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface2);
+  gap: 10px;
+}
+.student-col-labels span {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.student-col-labels span:first-child { flex: 1; }
+
+/* Row dalam kad — buang border-radius, guna divider */
+.student-mobile-card .student-card-row {
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 11px 14px;
+}
+.student-mobile-card .student-card-row:last-child { border-bottom: none; }
+
 /* ===== MODAL QR ===== */
 .modal-qr-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
 .modal-qr-box {
