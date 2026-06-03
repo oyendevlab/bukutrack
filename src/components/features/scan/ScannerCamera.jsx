@@ -8,12 +8,15 @@ export default function ScannerCamera({ onScan, active }) {
 
   useEffect(() => {
     if (!active) { stopScanner(); return }
-    startScanner()
-    return () => stopScanner()
+    // Delay kecil supaya DOM render sepenuhnya sebelum scanner cuba akses div#qr-reader
+    const timer = setTimeout(startScanner, 150)
+    return () => { clearTimeout(timer); stopScanner() }
   }, [active])
 
   async function startScanner() {
     if (scannerRef.current) return
+    const el = document.getElementById('qr-reader')
+    if (!el) return
     try {
       const { Html5Qrcode } = await import('html5-qrcode')
       const scanner = new Html5Qrcode('qr-reader')
@@ -26,27 +29,31 @@ export default function ScannerCamera({ onScan, active }) {
       )
       setStarted(true)
       setError('')
-    } catch {
+    } catch (err) {
+      console.error('Scanner error:', err)
       setError('Kamera tidak dapat diakses. Sila benarkan akses kamera.')
     }
   }
 
   async function stopScanner() {
     if (!scannerRef.current) return
-    try { await scannerRef.current.stop(); scannerRef.current.clear() } catch {}
+    try {
+      if (scannerRef.current.isScanning) await scannerRef.current.stop()
+      scannerRef.current.clear()
+    } catch {}
     scannerRef.current = null
     setStarted(false)
   }
 
   return (
     <div>
-      {/* html5-qrcode inject video ke dalam div ini */}
       <div
         id="qr-reader"
         style={{
-          width: '220px', height: '220px', margin: '0 auto',
+          width: '260px', height: '260px', margin: '0 auto',
           borderRadius: 'var(--radius-card)', overflow: 'hidden',
           display: started ? 'block' : 'none',
+          background: '#000',
         }}
       />
 
@@ -55,7 +62,10 @@ export default function ScannerCamera({ onScan, active }) {
           <div className="qr-corner tl" /><div className="qr-corner tr" />
           <div className="qr-corner bl" /><div className="qr-corner br" />
           <div className="qr-scan-line" />
-          <div className="qr-icon"><QrCode size={52} weight="thin" /></div>
+          <div className="qr-icon">
+            <QrCode size={52} weight="thin" />
+            <div style={{ fontSize: '11px', color: 'var(--ink3)', marginTop: '8px' }}>Memuatkan kamera...</div>
+          </div>
         </div>
       )}
 

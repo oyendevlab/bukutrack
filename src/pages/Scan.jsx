@@ -153,6 +153,7 @@ export default function Scan() {
               )}
 
               <ScannerCamera onScan={handleScan} active={cameraActive} />
+
               <div className="scan-sub" style={{ marginTop: '8px' }}>
                 Imbas QR murid untuk tandakan hadir
               </div>
