@@ -943,7 +943,7 @@ body {
 /* ===== STUDENTS — mobile card list ===== */
 .student-card-row {
   display: grid;
-  grid-template-columns: 1fr 80px auto;
+  grid-template-columns: 1fr 90px 64px;
   align-items: center;
   gap: 8px;
   background: var(--surface);
@@ -953,8 +953,8 @@ body {
   box-shadow: 0 2px 8px rgba(100,140,200,0.06);
 }
 .student-card-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
-.student-card-name { flex: 1; font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.student-card-class { flex-shrink: 0; min-width: 72px; text-align: center; }
+.student-card-name { font-size: 14px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.student-card-class { font-size: 13px; font-weight: 500; color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Filter dropdown */
 .filter-select {
@@ -983,7 +983,7 @@ body {
 /* Sub-label NAMA / KELAS */
 .student-col-labels {
   display: grid;
-  grid-template-columns: 1fr 80px auto;
+  grid-template-columns: 1fr 90px 64px;
   align-items: center;
   padding: 6px 14px;
   border-bottom: 1px solid var(--rule);

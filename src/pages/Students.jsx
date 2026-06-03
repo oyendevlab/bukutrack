@@ -169,7 +169,7 @@ export default function Students() {
             ) : filtered.map((s) => (
               <div key={s.id} className="student-card-row">
                 <div className="student-card-name">{s.name}</div>
-                <span className="tag tag-ink student-card-class">{getClassName(s.class_id)}</span>
+                <div className="student-card-class">{getClassName(s.class_id)}</div>
                 <div className="class-card-actions">
                   <EditBtn onClick={() => openEdit(s)} />
                   <DeleteBtn onClick={() => setConfirmDelete(s)} />
