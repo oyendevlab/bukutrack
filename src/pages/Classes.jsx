@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
@@ -19,6 +20,7 @@ const EMPTY_FORM = { subject: '', yearName: '', color: 'blue' }
 
 export default function Classes() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { classes, loading, addClass, updateClass, deleteClass } = useClasses()
   const { students } = useStudents()
 
@@ -89,7 +91,7 @@ export default function Classes() {
                     return (
                       <tr key={cls.id}>
                         <td style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--ink3)' }}>{String(i + 1).padStart(2, '0')}</td>
-                        <td style={{ fontWeight: 700 }}>{cls.subject}</td>
+                        <td style={{ fontWeight: 700, cursor: 'pointer', color: 'var(--accent)' }} onClick={() => navigate(`/class/${cls.id}`)}>{cls.subject}</td>
                         <td><span className="tag tag-ink">{cls.year_name}</span></td>
                         <td style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>{count}</td>
                         <td><div style={{ width: 16, height: 16, borderRadius: '50%', background: hex, border: '2px solid var(--rule)' }} /></td>
@@ -113,7 +115,7 @@ export default function Classes() {
               const count = students.filter(s => s.class_id === cls.id).length
               const hex = CLASS_COLORS.find(c => c.value === cls.color)?.hex || '#6b8fd4'
               return (
-                <div key={cls.id} className="class-card-row" style={{ '--cls-color': hex }}>
+                <div key={cls.id} className="class-card-row" style={{ '--cls-color': hex, cursor: 'pointer' }} onClick={() => navigate(`/class/${cls.id}`)}>
                   <div className="class-card-color-bar" />
                   <div className="class-card-info">
                     <div className="class-card-subject">{cls.subject}</div>
@@ -122,7 +124,7 @@ export default function Classes() {
                       <span className="class-card-count">{count} murid</span>
                     </div>
                   </div>
-                  <div className="class-card-actions">
+                  <div className="class-card-actions" onClick={e => e.stopPropagation()}>
                     <EditBtn onClick={() => openEdit(cls)} />
                     <DeleteBtn onClick={() => setConfirmDelete(cls)} />
                   </div>
