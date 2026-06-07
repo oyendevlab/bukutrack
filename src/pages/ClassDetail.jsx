@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
@@ -7,11 +7,12 @@ import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useAppContext } from '../context/AppContext.jsx'
-import { ArrowLeft, Camera, CheckCircle, XCircle, NotePencil, CaretDown, CaretUp, Trash } from '@phosphor-icons/react'
+import { ArrowLeft, Camera, Trash } from '@phosphor-icons/react'
 
-function formatDate(dateStr) {
+function shortDate(dateStr) {
   if (!dateStr) return '—'
-  return new Date(dateStr).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' })
+  const d = new Date(dateStr + 'T00:00:00')
+  return d.toLocaleDateString('ms-MY', { day: 'numeric', month: 'numeric' })
 }
 
 export default function ClassDetail() {
@@ -22,41 +23,45 @@ export default function ClassDetail() {
   const { classes } = useClasses()
   const { students } = useStudents()
   const { books } = useBooks()
-  const { sessions, sessionRecords, updateSessionNote, deleteSession } = useAppContext()
+  const { sessions, sessionRecords, deleteSession } = useAppContext()
 
-  const [expandedId, setExpandedId] = useState(null)
-  const [editingNote, setEditingNote] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
 
   const cls = classes.find(c => c.id === classId)
-  const classStudents = useMemo(() => students.filter(s => s.class_id === classId), [students, classId])
-  const classBooks = useMemo(() => books.filter(b => b.class_id === classId || b.class_id === null), [books, classId])
-  const classSessions = useMemo(() => sessions.filter(s => s.class_id === classId), [sessions, classId])
+
+  const classStudents = useMemo(
+    () => students.filter(s => s.class_id === classId).sort((a, b) => a.name.localeCompare(b.name)),
+    [students, classId]
+  )
+  const classBooks = useMemo(
+    () => books.filter(b => b.class_id === classId || b.class_id === null),
+    [books, classId]
+  )
+  const classSessions = useMemo(
+    () => [...sessions.filter(s => s.class_id === classId)].sort((a, b) => a.checked_at.localeCompare(b.checked_at)),
+    [sessions, classId]
+  )
+
+  // Lookup pantas: recordMap[sessionId][studentId] = record
+  const recordMap = useMemo(() => {
+    const map = {}
+    sessionRecords.forEach(r => {
+      if (!map[r.session_id]) map[r.session_id] = {}
+      map[r.session_id][r.student_id] = r
+    })
+    return map
+  }, [sessionRecords])
 
   const todayStr = new Date().toISOString().slice(0, 10)
   const todaySessions = classSessions.filter(s => s.checked_at === todayStr)
 
-  function getRecords(sessionId) {
-    return sessionRecords.filter(r => r.session_id === sessionId)
-  }
-
-  function getStudent(id) {
-    return students.find(s => s.id === id)
-  }
-
-  async function handleSaveNote() {
-    if (!editingNote) return
-    await updateSessionNote(editingNote.sessionId, editingNote.studentId, editingNote.note)
-    setEditingNote(null)
-  }
-
   if (!cls) {
     return (
-      <Layout title="Kelas" breadcrumb="Dashboard">
+      <Layout title="Kelas" breadcrumb="Senarai Kelas">
         <div style={{ textAlign: 'center', padding: '60px', color: 'var(--ink3)', fontSize: '13px' }}>
           Kelas tidak dijumpai.{' '}
-          <span style={{ color: 'var(--accent)', cursor: 'pointer', fontWeight: 700 }} onClick={() => navigate('/')}>
-            Kembali ke Dashboard
+          <span style={{ color: 'var(--accent)', cursor: 'pointer', fontWeight: 700 }} onClick={() => navigate('/classes')}>
+            Kembali ke Senarai Kelas
           </span>
         </div>
       </Layout>
@@ -68,14 +73,14 @@ export default function ClassDetail() {
       title={`${cls.subject} · ${cls.year_name}`}
       breadcrumb={
         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Dashboard</span>
+          <span style={{ cursor: 'pointer' }} onClick={() => navigate('/classes')}>Senarai Kelas</span>
           <span style={{ color: 'var(--ink3)' }}>›</span>
           <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{cls.year_name}</span>
         </span>
       }
       actions={
         <>
-          <button className="btn btn-ghost btn-sm" onClick={() => navigate('/')}>
+          <button className="btn btn-ghost btn-sm" onClick={() => navigate('/classes')}>
             <ArrowLeft size={14} weight="bold" /> {t('class.allClasses')}
           </button>
           <button className="btn btn-primary btn-sm" onClick={() => navigate('/scan')}>
@@ -108,18 +113,18 @@ export default function ClassDetail() {
         </div>
       </div>
 
-      {/* Rekod Sesi */}
-      <div className="card">
+      {/* Matriks Kehadiran */}
+      <div className="card" style={{ overflow: 'hidden' }}>
         <div className="card-header">
-          <div className="card-title">Rekod Sesi</div>
+          <div className="card-title">Rekod Semakan</div>
           <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>
-            {classSessions.length} sesi
+            {classSessions.length} sesi · {classStudents.length} murid
           </span>
         </div>
 
         {classSessions.length === 0 ? (
-          <div style={{ padding: '32px', textAlign: 'center', color: 'var(--ink3)', fontSize: '13px' }}>
-            <div style={{ marginBottom: '12px', fontSize: '28px', opacity: 0.2 }}>📋</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--ink3)', fontSize: '13px' }}>
+            <div style={{ marginBottom: '12px', fontSize: '32px', opacity: 0.2 }}>📋</div>
             Belum ada sesi semakan untuk kelas ini.
             <div style={{ marginTop: '12px' }}>
               <button className="btn btn-primary btn-sm" onClick={() => navigate('/scan')}>
@@ -127,113 +132,64 @@ export default function ClassDetail() {
               </button>
             </div>
           </div>
-        ) : classSessions.map(session => {
-          const isExpanded = expandedId === session.id
-          const records = getRecords(session.id)
-          const presentCount = records.filter(r => r.status === 'present').length
-          const absentCount = records.filter(r => r.status === 'absent').length
-          const book = session.books || classBooks.find(b => b.id === session.book_id)
-
-          return (
-            <div key={session.id} style={{ borderBottom: '1px solid var(--rule)' }}>
-              <div
-                style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 18px', cursor: 'pointer', transition: 'background 0.12s' }}
-                onClick={() => setExpandedId(isExpanded ? null : session.id)}
-              >
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)', marginBottom: '3px' }}>
-                    {formatDate(session.checked_at)}
-                  </div>
-                  <div style={{ fontSize: '12px', color: 'var(--ink2)' }}>
-                    {book?.emoji} {book?.name || '—'}
-                  </div>
-                  {session.notes && (
-                    <div style={{ fontSize: '11px', color: 'var(--ink3)', marginTop: '2px' }}>📝 {session.notes}</div>
-                  )}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '12px', fontWeight: 700, color: 'var(--green)' }}>
-                    <CheckCircle size={13} weight="fill" />{presentCount}
-                  </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '12px', fontWeight: 700, color: 'var(--red)' }}>
-                    <XCircle size={13} weight="fill" />{absentCount}
-                  </span>
-                  {isExpanded ? <CaretUp size={13} color="var(--ink3)" /> : <CaretDown size={13} color="var(--ink3)" />}
-                </div>
-              </div>
-
-              {isExpanded && (
-                <div style={{ background: 'var(--surface2)', borderTop: '1px solid var(--rule)' }}>
-                  {records.length === 0 ? (
-                    <div style={{ padding: '16px 18px', fontSize: '12px', color: 'var(--ink3)' }}>Tiada rekod murid.</div>
-                  ) : (
-                    <>
-                      {records.filter(r => r.status === 'present').map(r => {
-                        const stu = getStudent(r.student_id)
-                        return (
-                          <div key={r.id} className="session-record-row present">
-                            <CheckCircle size={14} weight="fill" color="var(--green)" />
-                            <span className="session-record-name">{stu?.name || '—'}</span>
-                            {r.scanned_at && (
-                              <span className="session-record-time">
-                                {new Date(r.scanned_at).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                            )}
-                          </div>
-                        )
-                      })}
-                      {records.filter(r => r.status === 'absent').map(r => {
-                        const stu = getStudent(r.student_id)
-                        const isEditing = editingNote?.sessionId === session.id && editingNote?.studentId === r.student_id
-                        return (
-                          <div key={r.id} className="session-record-row absent">
-                            <XCircle size={14} weight="fill" color="var(--red)" />
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                              <div className="session-record-name">{stu?.name || '—'}</div>
-                              {isEditing ? (
-                                <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
-                                  <input className="input"
-                                    style={{ flex: 1, fontSize: '12px', padding: '6px 10px', height: '32px' }}
-                                    placeholder="Sebab tidak hadir..."
-                                    value={editingNote.note}
-                                    onChange={e => setEditingNote(n => ({ ...n, note: e.target.value }))}
-                                    autoFocus
-                                  />
-                                  <button className="btn btn-primary btn-sm" onClick={handleSaveNote}>✓</button>
-                                  <button className="btn btn-ghost btn-sm" onClick={() => setEditingNote(null)}>✕</button>
-                                </div>
-                              ) : r.note ? (
-                                <div style={{ fontSize: '11px', color: 'var(--ink3)', marginTop: '2px' }}>📝 {r.note}</div>
-                              ) : null}
-                            </div>
-                            {!isEditing && (
-                              <button className="btn btn-ghost btn-sm"
-                                style={{ padding: '4px 8px', flexShrink: 0 }}
-                                onClick={() => setEditingNote({ sessionId: session.id, studentId: r.student_id, note: r.note || '' })}>
-                                <NotePencil size={13} weight="bold" />
-                              </button>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </>
-                  )}
-                  <div style={{ padding: '8px 18px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <button className="btn btn-ghost btn-sm" style={{ color: 'var(--red)', gap: '4px' }}
-                      onClick={() => setConfirmDelete(session)}>
-                      <Trash size={12} weight="bold" /> Padam Sesi
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )
-        })}
+        ) : (
+          <div className="matrix-scroll">
+            <table className="matrix-table">
+              <thead>
+                <tr>
+                  <th className="matrix-th-name">NAMA</th>
+                  {classSessions.map(session => {
+                    const book = session.books || classBooks.find(b => b.id === session.book_id)
+                    return (
+                      <th key={session.id} className="matrix-th-session">
+                        <div className="matrix-session-date">{shortDate(session.checked_at)}</div>
+                        <div className="matrix-session-book" title={book?.name}>
+                          {book?.emoji || '📖'}
+                        </div>
+                        <button
+                          className="matrix-delete-btn"
+                          title="Padam sesi"
+                          onClick={() => setConfirmDelete(session)}
+                        >
+                          <Trash size={10} weight="bold" />
+                        </button>
+                      </th>
+                    )
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {classStudents.length === 0 ? (
+                  <tr>
+                    <td colSpan={classSessions.length + 1} style={{ padding: '24px', textAlign: 'center', color: 'var(--ink3)', fontSize: '12px' }}>
+                      Tiada murid dalam kelas ini.
+                    </td>
+                  </tr>
+                ) : classStudents.map((stu, idx) => (
+                  <tr key={stu.id} className={idx % 2 === 0 ? 'matrix-row-even' : 'matrix-row-odd'}>
+                    <td className="matrix-td-name">{stu.name}</td>
+                    {classSessions.map(session => {
+                      const rec = recordMap[session.id]?.[stu.id]
+                      const status = rec?.status
+                      return (
+                        <td key={session.id} className="matrix-td-cell">
+                          {status === 'present' && <span className="matrix-badge matrix-present">✓</span>}
+                          {status === 'absent'  && <span className="matrix-badge matrix-absent">✗</span>}
+                          {!status              && <span className="matrix-badge matrix-empty">—</span>}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {confirmDelete && (
         <ConfirmDialog
-          message={`Padam sesi "${formatDate(confirmDelete.checked_at)}"? Semua rekod murid akan dipadam.`}
+          message={`Padam sesi "${shortDate(confirmDelete.checked_at)}"? Semua rekod murid dalam sesi ini akan dipadam.`}
           onConfirm={async () => { await deleteSession(confirmDelete.id); setConfirmDelete(null) }}
           onCancel={() => setConfirmDelete(null)}
         />
