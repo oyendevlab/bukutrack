@@ -213,8 +213,9 @@ body {
 }
 
 .logo { padding: 20px 20px 16px; border-bottom: 1px solid var(--sidebar-border); }
-.logo-mark { font-family: var(--font-heading); font-size: 26px; color: var(--sidebar-text-active); letter-spacing: 3px; line-height: 1; }
+.logo-mark { font-family: var(--font-heading); font-size: 26px; color: var(--sidebar-text-active); letter-spacing: 3px; line-height: 1; display: flex; align-items: center; gap: 8px; }
 .logo-mark span { color: var(--accent); }
+.logo-emoji { font-size: 24px; letter-spacing: 0; line-height: 1; }
 
 .nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 

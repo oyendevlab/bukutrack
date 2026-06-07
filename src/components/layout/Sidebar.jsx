@@ -53,10 +53,13 @@ export default function Sidebar({ open, collapsed = false, onClose, incompleteCo
 
       <aside className={`sidebar${open ? ' open' : ''}${collapsed ? ' sidebar-collapsed' : ''}`}>
 
-        {/* Logo — sembunyikan subtitle, icon-only mode tunjuk "BT" */}
+        {/* Logo */}
         <div className="logo">
           <div className="logo-mark">
-            {collapsed ? <span>BT</span> : <>BUKU<span>TRACK</span></>}
+            {collapsed
+              ? <span className="logo-emoji">📚</span>
+              : <><span className="logo-emoji">📚</span> BUKU<span>TRACK</span></>
+            }
           </div>
         </div>
 
