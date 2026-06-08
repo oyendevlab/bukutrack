@@ -73,7 +73,7 @@ export default defineConfig({
         background_color: '#f0f4f8',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+        start_url: '/dashboard',
         scope: '/',
         lang: 'ms',
         categories: ['education', 'productivity'],

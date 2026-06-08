@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react'
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx'
 import { AppProvider } from './context/AppContext.jsx'
 
+const Landing = lazy(() => import('./pages/Landing.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
 const Register = lazy(() => import('./pages/Register.jsx'))
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
@@ -27,7 +28,7 @@ function ProtectedRoute({ children }) {
 function PublicRoute({ children }) {
   const { user, loading } = useAuth()
   if (loading) return <div className="loading-screen">Memuatkan...</div>
-  if (user) return <Navigate to="/" replace />
+  if (user) return <Navigate to="/dashboard" replace />
   return children
 }
 
@@ -35,9 +36,10 @@ function AppRoutes() {
   return (
     <Suspense fallback={<div className="loading-screen">Memuatkan...</div>}>
       <Routes>
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="/scan" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
         <Route path="/records" element={<ProtectedRoute><Records /></ProtectedRoute>} />
@@ -48,7 +50,7 @@ function AppRoutes() {
         <Route path="/qr-print" element={<ProtectedRoute><QRPrint /></ProtectedRoute>} />
         <Route path="/settings/privacy" element={<ProtectedRoute><Privacy /></ProtectedRoute>} />
         <Route path="/settings/donate" element={<ProtectedRoute><Donate /></ProtectedRoute>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Suspense>
   )

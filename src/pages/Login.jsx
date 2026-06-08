@@ -22,7 +22,7 @@ export default function Login() {
       setError('E-mel atau kata laluan tidak sah.')
       setLoading(false)
     } else {
-      navigate('/')
+      navigate('/dashboard')
     }
   }
 
@@ -31,7 +31,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/dashboard`,
       },
     })
     if (error) {

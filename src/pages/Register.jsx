@@ -28,7 +28,7 @@ export default function Register() {
       setError(error.message === 'User already registered' ? 'E-mel ini sudah didaftarkan.' : error.message)
       setLoading(false)
     } else {
-      navigate('/')
+      navigate('/dashboard')
     }
   }
 

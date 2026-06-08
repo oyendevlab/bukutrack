@@ -69,11 +69,11 @@ export default function BottomNav({ incompleteCount = 0 }) {
       {/* Bottom nav bar */}
       <nav className="bottom-nav">
         <button
-          className={`bottom-nav-item${location.pathname === '/' ? ' active' : ''}`}
-          onClick={() => handleNav('/')}
+          className={`bottom-nav-item${location.pathname === '/dashboard' ? ' active' : ''}`}
+          onClick={() => handleNav('/dashboard')}
         >
           <span className="bottom-nav-icon">
-            <SquaresFour size={22} weight={location.pathname === '/' ? 'fill' : 'regular'} />
+            <SquaresFour size={22} weight={location.pathname === '/dashboard' ? 'fill' : 'regular'} />
           </span>
           <span className="bottom-nav-label">{t('nav.dashboard')}</span>
         </button>

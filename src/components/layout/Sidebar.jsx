@@ -16,7 +16,7 @@ import {
 
 const NAV_ITEMS = [
   { section: 'main' },
-  { Icon: SquaresFour,  labelKey: 'nav.dashboard', path: '/' },
+  { Icon: SquaresFour,  labelKey: 'nav.dashboard', path: '/dashboard' },
   { Icon: QrCode,       labelKey: 'nav.scan',      path: '/scan' },
   { Icon: ClipboardText,labelKey: 'nav.records',   path: '/records', badge: true },
   { section: 'management' },
@@ -74,8 +74,8 @@ export default function Sidebar({ open, collapsed = false, onClose, incompleteCo
               )
             }
 
-            const isActive = item.path === '/'
-              ? location.pathname === '/'
+            const isActive = item.path === '/dashboard'
+              ? location.pathname === '/dashboard'
               : location.pathname.startsWith(item.path)
 
             return (
