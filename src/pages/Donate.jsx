@@ -72,6 +72,72 @@ function QRModal({ onClose }) {
   )
 }
 
+const EMAIL = 'didikbytes@gmail.com'
+
+function ContactModal({ onClose }) {
+  const options = [
+    {
+      icon: '🐛',
+      title: 'Laporkan Bug / Cadangan',
+      desc: 'Jumpa masalah atau ada idea ciri baru? Beritahu kami.',
+      subject: 'BukuTrack — Bug / Cadangan',
+      body: 'Huraikan masalah atau cadangan anda di sini:\n\n',
+    },
+    {
+      icon: '💬',
+      title: 'Maklum Balas',
+      desc: 'Ceritakan pengalaman menggunakan BukuTrack.',
+      subject: 'BukuTrack — Maklum Balas',
+      body: 'Pengalaman saya menggunakan BukuTrack:\n\n',
+    },
+  ]
+
+  function openMail(opt) {
+    const url = `mailto:${EMAIL}?subject=${encodeURIComponent(opt.subject)}&body=${encodeURIComponent(opt.body)}`
+    window.location.href = url
+    onClose()
+  }
+
+  return (
+    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal" style={{ maxWidth: '380px', width: '90%' }}>
+        <div className="modal-head">
+          <div className="modal-init">✉️</div>
+          <div>
+            <div className="modal-sname">Hubungi Kami</div>
+            <div className="modal-smeta">Pilih jenis mesej</div>
+          </div>
+          <button onClick={onClose} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink3)', padding: '4px' }}>
+            <X size={18} weight="bold" />
+          </button>
+        </div>
+        <div className="modal-body" style={{ padding: '16px' }}>
+          {options.map(opt => (
+            <div key={opt.title} onClick={() => openMail(opt)} style={{
+              display: 'flex', alignItems: 'center', gap: '14px', padding: '14px',
+              border: '1.5px solid var(--rule)', borderRadius: 'var(--radius-card)',
+              marginBottom: '10px', cursor: 'pointer', transition: 'all 0.15s',
+            }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-bg)' }}
+              onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--rule)'; e.currentTarget.style.background = 'transparent' }}
+            >
+              <div style={{ fontSize: '26px', flexShrink: 0, width: '40px', textAlign: 'center' }}>{opt.icon}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)', marginBottom: '2px' }}>{opt.title}</div>
+                <div style={{ fontSize: '11.5px', color: 'var(--ink3)', lineHeight: 1.5 }}>{opt.desc}</div>
+              </div>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent)', flexShrink: 0 }}>E-mel →</div>
+            </div>
+          ))}
+          <div style={{ fontSize: '11px', color: 'var(--ink3)', textAlign: 'center', marginTop: '4px' }}>
+            {EMAIL}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const AppInfoRow = ({ label, value, mono }) => (
   <div style={{ display: 'flex', gap: '12px', padding: '8px 0', borderBottom: '1px solid var(--rule)', alignItems: 'center' }}>
     <div style={{ width: '120px', flexShrink: 0, color: 'var(--ink3)', fontWeight: 700, fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>{label}</div>
@@ -83,8 +149,9 @@ const APP_URL = 'https://bukutrack.vercel.app'
 const SHARE_TEXT = 'Cuba BukuTrack — aplikasi percuma untuk cikgu mengurus rekod buku teks murid dengan QR scan! 📚'
 
 export default function Donate() {
-  const [showQR, setShowQR]       = useState(false)
-  const [toastMsg, setToastMsg]   = useState('')
+  const [showQR, setShowQR]         = useState(false)
+  const [showContact, setShowContact] = useState(false)
+  const [toastMsg, setToastMsg]     = useState('')
 
   function showToast(msg) {
     setToastMsg(msg)
@@ -142,12 +209,9 @@ export default function Donate() {
           <SupportCard icon="⭐" title="Kongsi BukuTrack" action="Kongsi"
             desc="Ceritakan BukuTrack kepada rakan-rakan guru. Setiap perkongsian memberi impak besar."
             onClick={handleShare} />
-          <SupportCard icon="🐛" title="Laporkan Bug / Cadangan" action="GitHub"
-            desc="Jumpa masalah atau ada idea ciri baru? Buka isu di GitHub — kami baca setiap satu."
-            href="https://github.com/oyendevlab/bukutrack/issues" />
-          <SupportCard icon="💬" title="Maklum Balas" action="E-mel"
-            desc="Ceritakan pengalaman anda menggunakan BukuTrack. Pandangan cikgu sangat berharga untuk kami."
-            href="mailto:syafidazuan@gmail.com?subject=BukuTrack%20Maklum%20Balas" />
+          <SupportCard icon="✉️" title="Hubungi Kami" action="E-mel"
+            desc="Laporkan bug, hantar cadangan, atau kongsi maklum balas anda kepada kami."
+            onClick={() => setShowContact(true)} />
         </div>
       </div>
 
@@ -161,7 +225,8 @@ export default function Donate() {
         </div>
       </div>
 
-      {showQR && <QRModal onClose={() => setShowQR(false)} />}
+      {showQR      && <QRModal      onClose={() => setShowQR(false)} />}
+      {showContact && <ContactModal onClose={() => setShowContact(false)} />}
 
       {/* Toast salin pautan */}
       {toastMsg && (
