@@ -1279,3 +1279,37 @@ body {
   color: var(--green);
   border-bottom: 1px solid rgba(34, 197, 94, 0.15);
 }
+
+/* ── Install Prompt Banner ─────────────────────────────────── */
+.install-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  animation: slideDown 0.25s ease;
+}
+
+.install-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.install-banner-text { flex: 1; min-width: 0; }
+.install-banner-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+.install-banner-sub   { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+
+.install-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}

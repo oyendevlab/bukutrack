@@ -3,6 +3,7 @@ import Sidebar from './Sidebar.jsx'
 import Topbar from './Topbar.jsx'
 import BottomNav from './BottomNav.jsx'
 import OfflineBanner from '../ui/OfflineBanner.jsx'
+import InstallPrompt from '../ui/InstallPrompt.jsx'
 
 export default function Layout({ title, breadcrumb, actions, children, incompleteCount }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)       // mobile slide-in
@@ -41,6 +42,7 @@ export default function Layout({ title, breadcrumb, actions, children, incomplet
           onToggleSidebar={handleToggle}
         />
         <OfflineBanner />
+        <InstallPrompt />
         <div className="content">
           {children}
         </div>
