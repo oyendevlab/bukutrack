@@ -75,10 +75,6 @@ export default function Donate() {
         <div className="card-body">
           <AppInfoRow label="Versi" value="v1.0.0" mono />
           <AppInfoRow label="Pembangun" value="oyendevlab" />
-          <AppInfoRow label="Dibina dengan" value="Vite · React · Supabase · Tailwind CSS" />
-          <AppInfoRow label="Lesen" value="MIT — Percuma untuk guna & ubah suai" />
-          <AppInfoRow label="Kod Sumber" value="github.com/oyendevlab/bukutrack" mono />
-          <AppInfoRow label="Sokongan" value="syafidazuan@gmail.com" />
           <div style={{ height: 1 }} />
         </div>
       </div>
