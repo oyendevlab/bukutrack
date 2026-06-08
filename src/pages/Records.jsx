@@ -6,7 +6,7 @@ import { useAppContext } from '../context/AppContext.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
-import { CheckCircle, XCircle, NotePencil, Trash, CaretDown, CaretUp } from '@phosphor-icons/react'
+import { CheckCircle, XCircle, NotePencil, Trash, CaretDown, CaretUp, WhatsappLogo } from '@phosphor-icons/react'
 
 function formatDate(dateStr) {
   if (!dateStr) return '—'
@@ -24,6 +24,44 @@ export default function Records() {
   const [expandedId, setExpandedId] = useState(null)
   const [editingNote, setEditingNote] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [toast, setToast] = useState('')
+
+  function showToast(msg) {
+    setToast(msg)
+    setTimeout(() => setToast(''), 2800)
+  }
+
+  function handleCopyWA(session, records, cls, book) {
+    const absentRecs = records.filter(r => r.status === 'absent')
+    const presentRecs = records.filter(r => r.status === 'present')
+    const absentStudents = absentRecs.map(r => getStudent(r.student_id)?.name).filter(Boolean)
+
+    const dateStr = new Date(session.checked_at + 'T00:00:00')
+      .toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })
+
+    const lines = [
+      `📚 *Semakan Buku — BukuTrack*`,
+      `📅 ${dateStr}`,
+      `📖 ${book?.emoji ?? '📖'} ${book?.name ?? '—'}`,
+      `🏫 ${cls?.year_name ?? '—'}`,
+      ``,
+    ]
+
+    if (absentStudents.length === 0) {
+      lines.push(`✅ *Semua murid telah menyerahkan buku!*`)
+    } else {
+      lines.push(`❌ *Murid Belum Serah Buku (${absentStudents.length}):*`)
+      absentStudents.forEach((name, i) => lines.push(`${i + 1}. ${name}`))
+    }
+
+    lines.push(``)
+    lines.push(`✅ Hadir: ${presentRecs.length} murid   ❌ Tidak Hadir: ${absentRecs.length} murid`)
+
+    const text = lines.join('\n')
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('✓ Teks disalin — tampal terus ke WhatsApp'))
+      .catch(() => showToast('Gagal salin. Cuba lagi.'))
+  }
 
   const filtered = sessions.filter(s => !filterClassId || s.class_id === filterClassId)
 
@@ -162,7 +200,15 @@ export default function Records() {
                         })}
                       </>
                     )}
-                    <div style={{ padding: '10px 14px', borderTop: '1px solid var(--rule)', display: 'flex', justifyContent: 'flex-end' }}>
+                    <div style={{ padding: '10px 14px', borderTop: '1px solid var(--rule)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: '#25D366' }}
+                        onClick={() => handleCopyWA(session, records, cls, book)}
+                      >
+                        <WhatsappLogo size={14} weight="fill" />
+                        Salin ke WA
+                      </button>
                       <button className="btn btn-ghost btn-sm" style={{ color: 'var(--red)', gap: '4px' }}
                         onClick={() => setConfirmDelete(session)}>
                         <Trash size={13} weight="bold" /> Padam Sesi
@@ -183,6 +229,8 @@ export default function Records() {
           onCancel={() => setConfirmDelete(null)}
         />
       )}
+
+      {toast && <div className="share-toast">{toast}</div>}
     </Layout>
   )
 }
