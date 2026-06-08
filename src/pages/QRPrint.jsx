@@ -5,7 +5,7 @@ import JSZip from 'jszip'
 import Layout from '../components/layout/Layout.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
-import { Printer, SquaresFour, List, DownloadSimple } from '@phosphor-icons/react'
+import { Printer, SquaresFour, List, DownloadSimple, Scissors } from '@phosphor-icons/react'
 
 function QRCard({ student, className, onDownload, listView }) {
   if (listView) {
@@ -84,6 +84,11 @@ export default function QRPrint() {
   const [zipping, setZipping] = useState(false)
   const containerRef = useRef(null)
 
+  function handlePrintA4() {
+    setListView(false)
+    setTimeout(() => window.print(), 120)
+  }
+
   const filtered = students.filter(s => !filterClassId || s.class_id === filterClassId)
 
   function getClassName(classId) {
@@ -142,8 +147,10 @@ export default function QRPrint() {
             <DownloadSimple size={14} weight="bold" />
             {zipping ? 'Memproses...' : '↓ ZIP'}
           </button>
-          <button className="btn btn-primary btn-sm no-print" onClick={() => window.print()}>
-            🖨 {t('qrPrint.printAll')}
+          <button className="btn btn-primary btn-sm no-print" onClick={handlePrintA4}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <Scissors size={14} weight="bold" />
+            Cetak A4
           </button>
         </div>
       }
@@ -185,16 +192,28 @@ export default function QRPrint() {
           <div style={{ fontSize: '13px', color: 'var(--ink3)' }}>Tambah murid dalam Senarai Murid dahulu.</div>
         </div>
       ) : (
-        <div ref={containerRef} className={listView ? 'qr-list' : 'qr-grid'}>
-          {filtered.map(student => (
-            <QRCard
-              key={student.id}
-              student={student}
-              className={getClassName(student.class_id)}
-              onDownload={handleDownload}
-              listView={listView}
-            />
-          ))}
+        <div className="qr-a4-sheet">
+          <div className="qr-print-header no-screen">
+            <div className="qr-print-title">
+              {filterClassId
+                ? `Kad QR — ${classes.find(c => c.id === filterClassId)?.subject} · ${classes.find(c => c.id === filterClassId)?.year_name}`
+                : 'Kad QR Murid'}
+            </div>
+            <div className="qr-print-meta">
+              {filtered.length} murid · Dicetak {new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </div>
+          </div>
+          <div ref={containerRef} className={listView ? 'qr-list' : 'qr-grid'}>
+            {filtered.map(student => (
+              <QRCard
+                key={student.id}
+                student={student}
+                className={getClassName(student.class_id)}
+                onDownload={handleDownload}
+                listView={listView}
+              />
+            ))}
+          </div>
         </div>
       )}
 

@@ -591,7 +591,18 @@ body {
   margin: 10mm;
 }
 
+/* Print header — sorok di skrin, papar semasa cetak */
+.no-screen { display: none; }
+.qr-print-header {
+  margin-bottom: 6mm;
+  padding-bottom: 3mm;
+  border-bottom: 0.5mm solid #999;
+}
+.qr-print-title { font-size: 13pt; font-weight: 700; color: #111; }
+.qr-print-meta  { font-size: 8pt;  color: #666; margin-top: 1mm; }
+
 @media print {
+  /* Sembunyikan semua UI aplikasi */
   .no-print,
   .sidebar,
   .sidebar-overlay,
@@ -600,30 +611,77 @@ body {
   .filter-bar,
   .alert,
   .btn,
-  .fab { display: none !important; }
+  .fab,
+  .install-card,
+  .offline-banner,
+  .ptr-indicator { display: none !important; }
 
-  .main { margin-left: 0 !important; }
-  .content { padding: 0 !important; padding-bottom: 0 !important; }
+  .no-screen { display: block !important; }
 
-  /* Grid 4 kolum × 5 baris = 20 QR per halaman A4 */
+  body, html { background: white !important; margin: 0; padding: 0; }
+  .main       { margin-left: 0 !important; }
+  .content    { padding: 8mm !important; padding-bottom: 0 !important; }
+
+  /* Grid 4 kolum — ~20 kad per halaman A4 */
   .qr-grid {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 6mm !important;
+    gap: 0 !important;
+    margin: 0 !important;
     page-break-inside: auto;
   }
 
+  /* Setiap kad: garisan putus-putus sebagai panduan gunting */
   .qr-card {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 6px;
+    border: 1.5px dashed #bbb !important;
+    border-radius: 0 !important;
+    padding: 4mm 3mm !important;
+    background: white !important;
+    box-shadow: none !important;
     break-inside: avoid;
     page-break-inside: avoid;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center;
   }
 
-  .qr-sname { font-size: 9px; }
+  /* Besarkan QR semasa cetak */
+  .qr-card canvas { width: 28mm !important; height: 28mm !important; }
 
-  body { background: white !important; }
+  /* Nama penuh — wrap jika terlalu panjang */
+  .qr-sname {
+    font-size: 7pt !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    max-width: 100% !important;
+    margin-top: 2mm !important;
+    color: #111 !important;
+  }
+
+  /* Nama kelas */
+  .qr-card > div:last-of-type {
+    font-size: 6.5pt !important;
+    color: #555 !important;
+    margin-top: 0.5mm !important;
+  }
+
+  /* Butang download dalam kad — sorok semasa cetak */
+  .qr-dl-btn { display: none !important; }
+
+  /* Gunting icon hint di sudut */
+  .qr-a4-sheet::before {
+    content: '✂ Gunting mengikut garisan putus-putus';
+    display: block;
+    font-size: 7pt;
+    color: #999;
+    margin-bottom: 3mm;
+    font-style: italic;
+  }
 }
 
 /* ===== GRID LAYOUTS ===== */
