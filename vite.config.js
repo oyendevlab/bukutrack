@@ -16,8 +16,7 @@ export default defineConfig({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
-          // ── Supabase REST API (GET sahaja) — NetworkFirst ──────────────
-          // Cuba network, jika gagal (offline) guna cache terakhir
+          // ── Supabase REST API (GET) — NetworkFirst ─────────────────────
           {
             urlPattern: /^https:\/\/zvkxrhljrfyoqeonipoy\.supabase\.co\/rest\/v1\/.*/i,
             method: 'GET',
@@ -25,8 +24,32 @@ export default defineConfig({
             options: {
               cacheName: 'supabase-data-cache',
               networkTimeoutSeconds: 5,
-              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 }, // 24 jam
+              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 },
               cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          // ── Supabase REST API (POST/PATCH/DELETE) — Background Sync ───
+          // Jika gagal (offline), masuk queue dan retry bila online semula
+          {
+            urlPattern: /^https:\/\/zvkxrhljrfyoqeonipoy\.supabase\.co\/rest\/v1\/.*/i,
+            method: 'POST',
+            handler: 'NetworkOnly',
+            options: {
+              backgroundSync: {
+                name: 'bukutrack-sync-queue',
+                options: { maxRetentionTime: 24 * 60 }, // 24 jam (minit)
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/zvkxrhljrfyoqeonipoy\.supabase\.co\/rest\/v1\/.*/i,
+            method: 'PATCH',
+            handler: 'NetworkOnly',
+            options: {
+              backgroundSync: {
+                name: 'bukutrack-sync-queue',
+                options: { maxRetentionTime: 24 * 60 },
+              },
             },
           },
           // ── Google Fonts ───────────────────────────────────────────────
@@ -63,6 +86,22 @@ export default defineConfig({
         shortcuts: [
           { name: 'Scan QR', short_name: 'Scan', description: 'Mula scan QR murid', url: '/scan', icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }] },
           { name: 'Dashboard', short_name: 'Dashboard', description: 'Lihat ringkasan', url: '/', icons: [{ src: '/icons/icon-192.png', sizes: '192x192' }] },
+        ],
+        screenshots: [
+          {
+            src: '/screenshots/mobile.png',
+            sizes: '390x844',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Senarai Kelas — BukuTrack',
+          },
+          {
+            src: '/screenshots/desktop.png',
+            sizes: '1280x800',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Rekod Semakan Matriks — BukuTrack',
+          },
         ],
       },
     }),
