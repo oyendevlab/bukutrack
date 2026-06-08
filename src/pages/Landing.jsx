@@ -48,7 +48,7 @@ const bezelInner = (bg = '#f4f7fc') => ({
 /* ─── Phone Mockup ───────────────────────────────────────── */
 function PhoneMockup() {
   return (
-    <div style={{
+    <div className="phone-mockup" style={{
       width: 'clamp(180px, 24vw, 264px)',
       aspectRatio: '9/18',
       background: T.dark,
@@ -181,7 +181,7 @@ export default function Landing() {
       </nav>
 
       {/* ── HERO — asymmetric, phone mockup kanan ─────────────── */}
-      <section style={{
+      <section className="hero-section" style={{
         minHeight: '100dvh',
         display: 'flex', alignItems: 'center',
         padding: 'clamp(110px, 14vw, 160px) clamp(20px, 6vw, 80px) 80px',
@@ -200,7 +200,7 @@ export default function Landing() {
           <div style={{ ...pill(), marginBottom: '28px' }}>
             ✦ SISTEM REKOD BUKU · PERCUMA SELAMANYA
           </div>
-          <h1 style={{
+          <h1 className="hero-h1" style={{
             fontFamily: T.display,
             fontSize: 'clamp(48px, 7vw, 84px)',
             fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.95,
@@ -217,7 +217,7 @@ export default function Landing() {
             BukuTrack membantu cikgu rekod semakan buku teks dan buku kerja
             dalam beberapa saat — scan QR, tanpa kertas, tanpa kira-kira manual.
           </p>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '36px' }}>
+          <div className="hero-ctas" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '36px' }}>
             <Link to="/register" className="cta-primary">
               Mula Guna Percuma
               <span className="btn-circle">→</span>
@@ -226,7 +226,7 @@ export default function Landing() {
               Lihat Cara Kerja ↓
             </a>
           </div>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div className="hero-badges" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {['✓ Percuma Selamanya', '✓ Tiada Iklan', '✓ Data Selamat', '✓ Tiada Had Murid'].map(t => (
               <span key={t} style={{
                 padding: '5px 12px', borderRadius: '999px',
@@ -238,7 +238,7 @@ export default function Landing() {
         </div>
 
         {/* Right — phone mockup */}
-        <div style={{ position: 'relative', zIndex: 1, flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="hero-phone-wrap" style={{ position: 'relative', zIndex: 1, flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div aria-hidden="true" style={{
             position: 'absolute',
             width: 'min(320px, 45vw)', height: 'min(320px, 45vw)',
@@ -539,6 +539,60 @@ export default function Landing() {
         @keyframes scanDrift {
           from { top: 18%; }
           to   { top: 76%; }
+        }
+
+        /* ── Mobile hero layout ── */
+        @media (max-width: 768px) {
+          .hero-section {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            min-height: auto !important;
+            padding: 96px 24px 60px !important;
+            gap: 0 !important;
+          }
+
+          /* Phone mockup pindah ke bawah teks — order trick */
+          .hero-phone-wrap {
+            order: 99;
+            width: 100% !important;
+            justify-content: center !important;
+            margin-top: 40px;
+          }
+          /* Besarkan telefon sedikit pada mobile */
+          .phone-mockup {
+            width: min(62vw, 230px) !important;
+          }
+          /* Sembunyikan blob halo di belakang telefon — jimat ruang */
+          .hero-phone-wrap > [aria-hidden] { display: none !important; }
+
+          /* H1 — kecilkan supaya tak 4 baris */
+          .hero-h1 {
+            font-size: clamp(40px, 11.5vw, 56px) !important;
+            margin-bottom: 18px !important;
+          }
+
+          /* CTA stack menegak, penuh lebar */
+          .hero-ctas {
+            flex-direction: column !important;
+            gap: 10px !important;
+            margin-bottom: 28px !important;
+          }
+          .hero-ctas a {
+            justify-content: center !important;
+            text-align: center;
+          }
+
+          /* Trust badges — 2 × 2 grid */
+          .hero-badges {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+          }
+          .hero-badges span {
+            text-align: center !important;
+            justify-content: center !important;
+            font-size: 12px !important;
+          }
         }
 
         /* Respects prefers-reduced-motion */
