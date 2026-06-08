@@ -1198,8 +1198,18 @@ body {
 
 .matrix-table { border-collapse: collapse; width: 100%; min-width: max-content; font-size: 12px; }
 
-.matrix-th-name {
+.matrix-th-num {
   position: sticky; left: 0; z-index: 2;
+  background: var(--surface2);
+  text-align: center; padding: 10px 10px;
+  font-size: 10px; font-family: var(--font-mono); font-weight: 700;
+  letter-spacing: 1px; color: var(--ink3);
+  border-bottom: 2px solid var(--rule); border-right: 1px solid var(--rule);
+  white-space: nowrap; width: 40px;
+}
+
+.matrix-th-name {
+  position: sticky; left: 40px; z-index: 2;
   background: var(--surface2);
   text-align: left; padding: 10px 16px;
   font-size: 10px; font-family: var(--font-mono); font-weight: 700;
@@ -1228,8 +1238,16 @@ body {
 .matrix-row-even { background: var(--surface); }
 .matrix-row-odd  { background: var(--surface2); }
 
-.matrix-td-name {
+.matrix-td-num {
   position: sticky; left: 0; z-index: 1;
+  font-size: 10px; font-family: var(--font-mono); font-weight: 600; color: var(--ink3);
+  padding: 10px 10px; text-align: center;
+  border-bottom: 1px solid var(--rule); border-right: 1px solid var(--rule);
+  background: inherit; white-space: nowrap; width: 40px;
+}
+
+.matrix-td-name {
+  position: sticky; left: 40px; z-index: 1;
   font-size: 13px; font-weight: 600; color: var(--ink);
   padding: 10px 16px;
   border-bottom: 1px solid var(--rule); border-right: 1px solid var(--rule);

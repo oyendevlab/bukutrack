@@ -137,6 +137,7 @@ export default function ClassDetail() {
             <table className="matrix-table">
               <thead>
                 <tr>
+                  <th className="matrix-th-num">#</th>
                   <th className="matrix-th-name">NAMA</th>
                   {classSessions.map(session => {
                     const book = session.books || classBooks.find(b => b.id === session.book_id)
@@ -161,12 +162,13 @@ export default function ClassDetail() {
               <tbody>
                 {classStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={classSessions.length + 1} style={{ padding: '24px', textAlign: 'center', color: 'var(--ink3)', fontSize: '12px' }}>
+                    <td colSpan={classSessions.length + 2} style={{ padding: '24px', textAlign: 'center', color: 'var(--ink3)', fontSize: '12px' }}>
                       Tiada murid dalam kelas ini.
                     </td>
                   </tr>
                 ) : classStudents.map((stu, idx) => (
                   <tr key={stu.id} className={idx % 2 === 0 ? 'matrix-row-even' : 'matrix-row-odd'}>
+                    <td className="matrix-td-num">{String(idx + 1).padStart(2, '0')}</td>
                     <td className="matrix-td-name">{stu.name}</td>
                     {classSessions.map(session => {
                       const rec = recordMap[session.id]?.[stu.id]
