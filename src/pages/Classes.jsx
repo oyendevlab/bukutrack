@@ -41,10 +41,13 @@ export default function Classes() {
   async function handleSave() {
     if (!form.subject.trim() || !form.yearName.trim()) { setError('Subjek dan Tahun/Kelas wajib diisi.'); return }
     setSaving(true)
+    setError('')
     if (editTarget) {
-      await updateClass(editTarget.id, { subject: form.subject.trim(), year_name: form.yearName.trim(), color: form.color })
+      const { error } = await updateClass(editTarget.id, { subject: form.subject.trim(), year_name: form.yearName.trim(), color: form.color })
+      if (error) { setError('Gagal kemaskini kelas: ' + error.message); setSaving(false); return }
     } else {
-      await addClass(form.subject.trim(), form.yearName.trim(), form.color)
+      const { error } = await addClass(form.subject.trim(), form.yearName.trim(), form.color)
+      if (error) { setError('Gagal simpan kelas: ' + error.message); setSaving(false); return }
     }
     setSaving(false); setShowModal(false)
   }
