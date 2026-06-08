@@ -7,7 +7,9 @@ import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useAppContext } from '../context/AppContext.jsx'
-import { ArrowLeft, Camera, Trash } from '@phosphor-icons/react'
+import { ArrowLeft, Camera, Trash, UserPlus } from '@phosphor-icons/react'
+
+const EMPTY_STUDENT = { name: '', studentNo: '' }
 
 function shortDate(dateStr) {
   if (!dateStr) return '—'
@@ -21,11 +23,15 @@ export default function ClassDetail() {
   const { t } = useTranslation()
 
   const { classes } = useClasses()
-  const { students } = useStudents()
+  const { students, addStudent } = useStudents()
   const { books } = useBooks()
   const { sessions, sessionRecords, deleteSession } = useAppContext()
 
-  const [confirmDelete, setConfirmDelete] = useState(null)
+  const [confirmDelete, setConfirmDelete]   = useState(null)
+  const [showAddStudent, setShowAddStudent] = useState(false)
+  const [studentForm, setStudentForm]       = useState(EMPTY_STUDENT)
+  const [studentError, setStudentError]     = useState('')
+  const [saving, setSaving]                 = useState(false)
 
   const cls = classes.find(c => c.id === classId)
 
@@ -54,6 +60,17 @@ export default function ClassDetail() {
 
   const todayStr = new Date().toISOString().slice(0, 10)
   const todaySessions = classSessions.filter(s => s.checked_at === todayStr)
+
+  async function handleSaveStudent() {
+    if (!studentForm.name.trim()) { setStudentError('Nama murid wajib diisi.'); return }
+    setSaving(true)
+    setStudentError('')
+    const { error } = await addStudent(studentForm.name.trim(), classId, studentForm.studentNo.trim())
+    setSaving(false)
+    if (error) { setStudentError('Gagal simpan. Cuba lagi.'); return }
+    setStudentForm(EMPTY_STUDENT)
+    setShowAddStudent(false)
+  }
 
   if (!cls) {
     return (
@@ -111,6 +128,40 @@ export default function ClassDetail() {
           <div className="stat-num">{todaySessions.length}</div>
           <div className="stat-note">sesi hari ini</div>
         </div>
+      </div>
+
+      {/* Senarai Murid */}
+      <div className="card">
+        <div className="card-header">
+          <div className="card-title">Murid</div>
+          <button className="btn btn-primary btn-sm" onClick={() => { setStudentForm(EMPTY_STUDENT); setStudentError(''); setShowAddStudent(true) }}>
+            <UserPlus size={13} weight="bold" /> Tambah Murid
+          </button>
+        </div>
+        {classStudents.length === 0 ? (
+          <div style={{ padding: '32px', textAlign: 'center', color: 'var(--ink3)', fontSize: '13px' }}>
+            <div style={{ fontSize: '28px', opacity: 0.25, marginBottom: '10px' }}>👤</div>
+            Belum ada murid dalam kelas ini.
+          </div>
+        ) : (
+          <div style={{ padding: '8px 0' }}>
+            {classStudents.map((stu, idx) => (
+              <div key={stu.id} style={{
+                display: 'flex', alignItems: 'center', gap: '12px',
+                padding: '9px 18px',
+                background: idx % 2 === 0 ? 'transparent' : 'var(--surface2)',
+              }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--ink3)', width: '22px', flexShrink: 0 }}>
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
+                <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ink)', flex: 1 }}>{stu.name}</span>
+                {stu.student_no && (
+                  <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>#{stu.student_no}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Matriks Kehadiran */}
@@ -195,6 +246,43 @@ export default function ClassDetail() {
           onConfirm={async () => { await deleteSession(confirmDelete.id); setConfirmDelete(null) }}
           onCancel={() => setConfirmDelete(null)}
         />
+      )}
+
+      {showAddStudent && (
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowAddStudent(false)}>
+          <div className="modal">
+            <div className="modal-head">
+              <div className="modal-init">👤</div>
+              <div>
+                <div className="modal-sname">Tambah Murid</div>
+                <div className="modal-smeta">{cls.subject} · {cls.year_name}</div>
+              </div>
+            </div>
+            <div className="modal-body">
+              {studentError && <div className="alert alert-warn" style={{ marginBottom: '12px' }}>▲ &nbsp;{studentError}</div>}
+              <label className="input-label">Nama Penuh Murid</label>
+              <input
+                className="input" placeholder="cth: Ahmad Danial bin Ali"
+                value={studentForm.name} autoFocus
+                onChange={e => setStudentForm(f => ({ ...f, name: e.target.value }))}
+                onKeyDown={e => e.key === 'Enter' && handleSaveStudent()}
+              />
+              <label className="input-label">No. Murid <span style={{ color: 'var(--ink3)', fontWeight: 400 }}>(pilihan)</span></label>
+              <input
+                className="input" placeholder="cth: 001"
+                value={studentForm.studentNo}
+                onChange={e => setStudentForm(f => ({ ...f, studentNo: e.target.value }))}
+                onKeyDown={e => e.key === 'Enter' && handleSaveStudent()}
+              />
+            </div>
+            <div className="modal-foot">
+              <button className="btn btn-ghost" onClick={() => setShowAddStudent(false)} disabled={saving}>Batal</button>
+              <button className="btn btn-primary" onClick={handleSaveStudent} disabled={saving}>
+                {saving ? '...' : '✓ Simpan'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </Layout>
   )
