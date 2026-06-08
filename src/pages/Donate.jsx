@@ -1,7 +1,9 @@
+import { useState } from 'react'
+import { X } from '@phosphor-icons/react'
 import Layout from '../components/layout/Layout.jsx'
 
-const SupportCard = ({ icon, title, desc, action, href }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', marginBottom: '10px' }}>
+const SupportCard = ({ icon, title, desc, action, href, onClick }) => {
+  const content = (
     <div style={{
       display: 'flex', alignItems: 'center', gap: '16px', padding: '16px',
       border: '1.5px solid var(--rule)', borderRadius: 'var(--radius-card)',
@@ -17,8 +19,58 @@ const SupportCard = ({ icon, title, desc, action, href }) => (
       </div>
       <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--accent)', flexShrink: 0 }}>{action} →</div>
     </div>
-  </a>
-)
+  )
+
+  if (onClick) {
+    return (
+      <div style={{ marginBottom: '10px', textDecoration: 'none' }} onClick={onClick}>
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block', marginBottom: '10px' }}>
+      {content}
+    </a>
+  )
+}
+
+function QRModal({ onClose }) {
+  return (
+    <div
+      className="modal-overlay"
+      onClick={e => e.target === e.currentTarget && onClose()}
+    >
+      <div className="modal" style={{ maxWidth: '340px', width: '90%' }}>
+        <div className="modal-head">
+          <div className="modal-init">☕</div>
+          <div>
+            <div className="modal-sname">Belanja Kopi</div>
+            <div className="modal-smeta">Imbas QR untuk bayar</div>
+          </div>
+          <button
+            onClick={onClose}
+            style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink3)', padding: '4px' }}
+          >
+            <X size={18} weight="bold" />
+          </button>
+        </div>
+        <div className="modal-body" style={{ textAlign: 'center', padding: '20px 24px 24px' }}>
+          <img
+            src="/qr-payment.PNG"
+            alt="QR Payment"
+            style={{ width: '100%', maxWidth: '260px', borderRadius: '12px', display: 'block', margin: '0 auto 16px' }}
+          />
+          <p style={{ fontSize: '12px', color: 'var(--ink3)', lineHeight: 1.7, margin: 0 }}>
+            Imbas menggunakan <strong>mana-mana aplikasi perbankan</strong> atau dompet digital Malaysia.<br />
+            Sebarang jumlah amat dihargai — terima kasih! 🙏
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const AppInfoRow = ({ label, value, mono }) => (
   <div style={{ display: 'flex', gap: '12px', padding: '8px 0', borderBottom: '1px solid var(--rule)', alignItems: 'center' }}>
@@ -28,6 +80,8 @@ const AppInfoRow = ({ label, value, mono }) => (
 )
 
 export default function Donate() {
+  const [showQR, setShowQR] = useState(false)
+
   return (
     <Layout title="Sokong Pembangun" breadcrumb="Maklumat · Sokongan">
 
@@ -54,9 +108,9 @@ export default function Donate() {
       <div className="card" style={{ marginBottom: '16px' }}>
         <div className="card-header"><div className="card-title">Cara Sokong Kami</div></div>
         <div className="card-body">
-          <SupportCard icon="☕" title="Belanja Kopi" action="Ko-fi"
-            desc="Sokong melalui Ko-fi. Sebarang jumlah amat dihargai — secawan kopi sudah cukup!"
-            href="https://ko-fi.com" />
+          <SupportCard icon="☕" title="Belanja Kopi" action="Bayar QR"
+            desc="Imbas QR Malaysia National untuk sokong kami. Sebarang jumlah amat dihargai!"
+            onClick={() => setShowQR(true)} />
           <SupportCard icon="⭐" title="Kongsi BukuTrack" action="Kongsi"
             desc="Ceritakan BukuTrack kepada rakan-rakan guru. Setiap perkongsian memberi impak besar."
             href="https://bukutrack.vercel.app" />
@@ -79,6 +133,7 @@ export default function Donate() {
         </div>
       </div>
 
+      {showQR && <QRModal onClose={() => setShowQR(false)} />}
     </Layout>
   )
 }
