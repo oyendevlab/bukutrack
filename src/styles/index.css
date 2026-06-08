@@ -1545,6 +1545,45 @@ body {
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
+/* ── Dark mode toggle button ── */
+.dark-toggle {
+  flex-shrink: 0;
+  margin-left: 4px;
+  padding: 6px 8px !important;
+  color: var(--ink2) !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+.dark-toggle:hover {
+  background: var(--surface2) !important;
+  border-color: var(--rule) !important;
+}
+
+/* ── Dark mode: input & modal surfaces ── */
+[data-dark="true"] .input,
+[data-dark="true"] .filter-select {
+  background: var(--surface2);
+  border-color: var(--rule);
+  color: var(--ink);
+}
+[data-dark="true"] .input::placeholder { color: var(--ink3); }
+[data-dark="true"] .modal {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+[data-dark="true"] .modal-overlay {
+  background: rgba(0,0,0,0.6);
+}
+[data-dark="true"] .session-card {
+  background: var(--surface);
+  border-color: var(--rule);
+}
+[data-dark="true"] .matrix-table th,
+[data-dark="true"] .matrix-table td {
+  border-color: var(--rule);
+}
+[data-dark="true"] .matrix-row-odd { background: var(--surface2); }
+
 /* ── Dashboard 2-col grid ── */
 .dash-two-col {
   display: grid;

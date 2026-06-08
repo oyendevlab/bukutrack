@@ -130,3 +130,33 @@
   --amber-bg: rgba(168,120,48,0.09);
   --login-bg: linear-gradient(135deg, #f0e4d0 0%, #f5ead8 50%, #ece0c8 100%);
 }
+
+/* ===== DARK MODE OVERRIDE ===== */
+/* Berlaku di atas mana-mana tema warna */
+[data-dark="true"] {
+  --bg: #0e1420;
+  --surface: #161e2e;
+  --surface2: #1a2438;
+  --surface3: #202c44;
+  --ink: #dce8f8;
+  --ink2: #7a98c4;
+  --ink3: #3f5880;
+  --rule: #1e2c44;
+  --border: #1e2c44;
+
+  --sidebar-bg: #111826;
+  --sidebar-border: #1a2438;
+  --sidebar-text: #4a6a9a;
+  --sidebar-text-active: #90b8e8;
+  --sidebar-active-bg: rgba(80,120,200,0.15);
+  --sidebar-section: #2a4068;
+
+  --accent-bg: rgba(107,143,212,0.15);
+  --red-bg: rgba(192,96,122,0.12);
+  --green-bg: rgba(74,148,112,0.12);
+  --amber-bg: rgba(176,120,64,0.12);
+
+  --login-bg: linear-gradient(135deg, #0e1420 0%, #131a2c 50%, #0f1e1a 100%);
+
+  color-scheme: dark;
+}
