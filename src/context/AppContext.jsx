@@ -78,6 +78,12 @@ export function AppProvider({ children }) {
     if (!error) setStudents(s => [...s, data].sort((a, b) => a.name.localeCompare(b.name)))
     return { data, error }
   }
+  async function addStudentsBulk(names, classId) {
+    const rows = names.map(name => ({ teacher_id: user.id, class_id: classId, name, student_no: '' }))
+    const { data, error } = await supabase.from('students').insert(rows).select()
+    if (!error && data) setStudents(s => [...s, ...data].sort((a, b) => a.name.localeCompare(b.name)))
+    return { data, error }
+  }
   async function updateStudent(id, updates) {
     const { error } = await supabase.from('students').update(updates).eq('id', id)
     if (!error) setStudents(s => s.map(st => st.id === id ? { ...st, ...updates } : st))
@@ -166,7 +172,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider value={{
       classes, students, books, sessions, sessionRecords, loading,
       addClass, updateClass, deleteClass,
-      addStudent, updateStudent, deleteStudent,
+      addStudent, addStudentsBulk, updateStudent, deleteStudent,
       addBook, updateBook, deleteBook,
       createSession, upsertSessionRecord, updateSessionNote, deleteSession,
       fetchAll,

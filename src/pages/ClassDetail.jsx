@@ -7,7 +7,8 @@ import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useAppContext } from '../context/AppContext.jsx'
-import { ArrowLeft, Camera, Trash, UserPlus } from '@phosphor-icons/react'
+import { ArrowLeft, Camera, Trash, UserPlus, UploadSimple } from '@phosphor-icons/react'
+import CsvImportModal from '../components/ui/CsvImportModal.jsx'
 
 const EMPTY_STUDENT = { name: '', studentNo: '' }
 
@@ -23,12 +24,13 @@ export default function ClassDetail() {
   const { t } = useTranslation()
 
   const { classes } = useClasses()
-  const { students, addStudent } = useStudents()
+  const { students, addStudent, addStudentsBulk } = useStudents()
   const { books } = useBooks()
   const { sessions, sessionRecords, deleteSession } = useAppContext()
 
   const [confirmDelete, setConfirmDelete]   = useState(null)
   const [showAddStudent, setShowAddStudent] = useState(false)
+  const [showCsvImport, setShowCsvImport]   = useState(false)
   const [studentForm, setStudentForm]       = useState(EMPTY_STUDENT)
   const [studentError, setStudentError]     = useState('')
   const [saving, setSaving]                 = useState(false)
@@ -134,6 +136,9 @@ export default function ClassDetail() {
       <div className="card">
         <div className="card-header">
           <div className="card-title">Murid</div>
+          <button className="btn btn-ghost btn-sm" onClick={() => setShowCsvImport(true)}>
+            <UploadSimple size={13} weight="bold" /> Import CSV
+          </button>
           <button className="btn btn-primary btn-sm" onClick={() => { setStudentForm(EMPTY_STUDENT); setStudentError(''); setShowAddStudent(true) }}>
             <UserPlus size={13} weight="bold" /> Tambah Murid
           </button>
@@ -245,6 +250,14 @@ export default function ClassDetail() {
           message={`Padam sesi "${shortDate(confirmDelete.checked_at)}"? Semua rekod murid dalam sesi ini akan dipadam.`}
           onConfirm={async () => { await deleteSession(confirmDelete.id); setConfirmDelete(null) }}
           onCancel={() => setConfirmDelete(null)}
+        />
+      )}
+
+      {showCsvImport && (
+        <CsvImportModal
+          className={`${cls.subject} · ${cls.year_name}`}
+          onClose={() => setShowCsvImport(false)}
+          onImport={async names => { await addStudentsBulk(names, classId) }}
         />
       )}
 

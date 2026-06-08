@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Layout from '../components/layout/Layout.jsx'
 import ConfirmDialog from '../components/ui/ConfirmDialog.jsx'
+import CsvImportModal from '../components/ui/CsvImportModal.jsx'
 import { EditBtn, DeleteBtn } from '../components/ui/IconBtn.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useClasses } from '../hooks/useClasses.jsx'
@@ -12,10 +13,12 @@ const EMPTY_FORM = { name: '', classId: '' }
 
 export default function Students() {
   const { t } = useTranslation()
-  const { students, loading, addStudent, updateStudent, deleteStudent } = useStudents()
+  const { students, loading, addStudent, addStudentsBulk, updateStudent, deleteStudent } = useStudents()
   const { classes } = useClasses()
 
   const [showModal, setShowModal] = useState(false)
+  const [showCsvImport, setShowCsvImport] = useState(false)
+  const [csvTargetClassId, setCsvTargetClassId] = useState(null)
   const [editTarget, setEditTarget] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
@@ -24,7 +27,6 @@ export default function Students() {
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
   const [fabOpen, setFabOpen] = useState(false)
-  const csvRef = useRef(null)
 
   const filtered = students
     .filter(s => !filterClassId || s.class_id === filterClassId)
@@ -57,22 +59,11 @@ export default function Students() {
     setShowModal(false)
   }
 
-  async function handleCsvImport(e) {
-    const file = e.target.files[0]
-    if (!file) return
-    const targetClassId = filterClassId || classes[0]?.id
-    if (!targetClassId) { alert('Pilih kelas dahulu sebelum import CSV.'); e.target.value = ''; return }
-    const text = await file.text()
-    const lines = text.split('\n').filter(l => l.trim())
-    const start = lines[0]?.toLowerCase().includes('nama') ? 1 : 0
-    let count = 0
-    for (const line of lines.slice(start)) {
-      const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''))
-      const name = cols[0]; const studentNo = cols[1] || ''
-      if (name) { await addStudent(name, targetClassId, studentNo); count++ }
-    }
-    e.target.value = ''
-    alert(`${count} murid berjaya diimport!`)
+  function openCsvImport() {
+    const targetId = filterClassId || classes[0]?.id || null
+    setCsvTargetClassId(targetId)
+    setShowCsvImport(true)
+    setFabOpen(false)
   }
 
   function getClassName(classId) {
@@ -85,11 +76,10 @@ export default function Students() {
       breadcrumb={t('nav.management')}
       actions={
         <>
-          <button className="btn btn-ghost btn-sm" onClick={() => csvRef.current?.click()} style={{display:'inline-flex',alignItems:'center',gap:'6px'}}>
-            ↑ {t('students.import')}
+          <button className="btn btn-ghost btn-sm" onClick={openCsvImport} style={{display:'inline-flex',alignItems:'center',gap:'6px'}}>
+            <UploadSimple size={13} weight="bold" /> {t('students.import')}
           </button>
           <button className="btn btn-primary btn-sm" onClick={openAdd}>+ {t('students.add')}</button>
-          <input ref={csvRef} type="file" accept=".csv" style={{ display: 'none' }} onChange={handleCsvImport} />
         </>
       }
     >
@@ -226,12 +216,27 @@ export default function Students() {
         />
       )}
 
+      {showCsvImport && (
+        <CsvImportModal
+          className={
+            csvTargetClassId
+              ? (classes.find(c => c.id === csvTargetClassId)?.subject + ' · ' + classes.find(c => c.id === csvTargetClassId)?.year_name)
+              : 'Pilih kelas'
+          }
+          onClose={() => setShowCsvImport(false)}
+          onImport={async names => {
+            if (!csvTargetClassId) return
+            await addStudentsBulk(names, csvTargetClassId)
+          }}
+        />
+      )}
+
       {/* FAB speed dial — mobile only */}
       {fabOpen && <div className="fab-overlay" onClick={() => setFabOpen(false)} />}
       <div className="fab-speed-dial">
         {fabOpen && (
           <div className="fab-options">
-            <button className="fab-option" onClick={() => { setFabOpen(false); csvRef.current?.click() }}>
+            <button className="fab-option" onClick={openCsvImport}>
               <UploadSimple size={18} weight="bold" />
               <span>{t('students.import')}</span>
             </button>

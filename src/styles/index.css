@@ -1433,6 +1433,37 @@ body {
   .install-card__ios-hint { animation: none !important; }
 }
 
+/* ── CSV Import Modal ─────────────────────────────────────── */
+.csv-dropzone {
+  border: 2px dashed var(--rule);
+  border-radius: 14px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--surface2);
+  transition: border-color 180ms, background 180ms;
+}
+.csv-dropzone:hover {
+  border-color: var(--accent);
+  background: rgba(61,112,214,0.05);
+}
+
+.csv-template-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--accent); font-size: 11px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 4px; padding: 0;
+  margin-top: 6px;
+}
+.csv-template-btn:hover { text-decoration: underline; }
+
+.csv-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+}
+.csv-badge--ok   { background: rgba(46,168,122,0.10); color: #1f8a61; }
+.csv-badge--warn { background: rgba(212,146,78,0.12); color: #b8763a; }
+
 /* ── Share Toast ───────────────────────────────────────────── */
 .share-toast {
   position: fixed;
