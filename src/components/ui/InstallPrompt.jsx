@@ -1,55 +1,64 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { DownloadSimple, X, DeviceMobile } from '@phosphor-icons/react'
 
 const DISMISSED_KEY = 'bukutrack_install_dismissed'
 
 export default function InstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null)
-  const [show, setShow]                     = useState(false)
-  const [isIos, setIsIos]                   = useState(false)
-  const [installed, setInstalled]           = useState(false)
+  const [show, setShow]           = useState(false)
+  const [isIos, setIsIos]         = useState(false)
+  const [installed, setInstalled] = useState(false)
+  const promptRef                 = useRef(null)
 
   useEffect(() => {
-    // Jika sudah pasang (standalone mode), jangan tunjuk
+    // Sudah dipasang (standalone) — jangan tunjuk
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       window.navigator.standalone === true
     if (isStandalone) { setInstalled(true); return }
 
-    // Jika sudah dismiss dalam sesi ini, jangan tunjuk
+    // Pernah dismiss — jangan tunjuk dalam sesi ini
     if (sessionStorage.getItem(DISMISSED_KEY)) return
 
     // iOS Safari — tidak support beforeinstallprompt
     const ua = navigator.userAgent
     const iosDevice = /iphone|ipad|ipod/i.test(ua) && !window.MSStream
-    if (iosDevice) {
-      setIsIos(true)
+    if (iosDevice) { setIsIos(true); setShow(true); return }
+
+    // Ambil prompt yang mungkin sudah ditangkap sebelum React mount
+    if (window.__pwaPrompt) {
+      promptRef.current = window.__pwaPrompt
       setShow(true)
       return
     }
 
-    // Android / Chrome / Edge — guna beforeinstallprompt
-    function handlePrompt(e) {
-      e.preventDefault()
-      setDeferredPrompt(e)
-      setShow(true)
+    // Tunggu event dari main.jsx jika prompt belum fire lagi
+    function onPromptReady() {
+      if (window.__pwaPrompt && !sessionStorage.getItem(DISMISSED_KEY)) {
+        promptRef.current = window.__pwaPrompt
+        setShow(true)
+      }
     }
 
-    window.addEventListener('beforeinstallprompt', handlePrompt)
+    window.addEventListener('pwa-prompt-ready', onPromptReady)
     window.addEventListener('appinstalled', () => {
       setShow(false)
       setInstalled(true)
+      window.__pwaPrompt = null
     })
 
-    return () => window.removeEventListener('beforeinstallprompt', handlePrompt)
+    return () => window.removeEventListener('pwa-prompt-ready', onPromptReady)
   }, [])
 
   async function handleInstall() {
-    if (!deferredPrompt) return
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
-    if (outcome === 'accepted') setShow(false)
-    setDeferredPrompt(null)
+    const prompt = promptRef.current
+    if (!prompt) return
+    prompt.prompt()
+    const { outcome } = await prompt.userChoice
+    if (outcome === 'accepted') {
+      setShow(false)
+      window.__pwaPrompt = null
+    }
+    promptRef.current = null
   }
 
   function handleDismiss() {
