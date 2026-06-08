@@ -16,6 +16,20 @@ export default defineConfig({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
+          // ── Supabase REST API (GET sahaja) — NetworkFirst ──────────────
+          // Cuba network, jika gagal (offline) guna cache terakhir
+          {
+            urlPattern: /^https:\/\/zvkxrhljrfyoqeonipoy\.supabase\.co\/rest\/v1\/.*/i,
+            method: 'GET',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'supabase-data-cache',
+              networkTimeoutSeconds: 5,
+              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 }, // 24 jam
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          // ── Google Fonts ───────────────────────────────────────────────
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
