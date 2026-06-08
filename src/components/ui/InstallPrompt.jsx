@@ -1,37 +1,33 @@
 import { useState, useEffect, useRef } from 'react'
-import { DownloadSimple, X, DeviceMobile } from '@phosphor-icons/react'
+import { DownloadSimple, X, ShareNetwork, ArrowDown } from '@phosphor-icons/react'
 
 const DISMISSED_KEY = 'bukutrack_install_dismissed'
 
 export default function InstallPrompt() {
-  const [show, setShow]           = useState(false)
-  const [isIos, setIsIos]         = useState(false)
+  const [show, setShow]       = useState(false)
+  const [isIos, setIsIos]     = useState(false)
   const [installed, setInstalled] = useState(false)
-  const promptRef                 = useRef(null)
+  const [exiting, setExiting] = useState(false)
+  const promptRef             = useRef(null)
 
   useEffect(() => {
-    // Sudah dipasang (standalone) — jangan tunjuk
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       window.navigator.standalone === true
     if (isStandalone) { setInstalled(true); return }
 
-    // Pernah dismiss — jangan tunjuk dalam sesi ini
     if (sessionStorage.getItem(DISMISSED_KEY)) return
 
-    // iOS Safari — tidak support beforeinstallprompt
     const ua = navigator.userAgent
     const iosDevice = /iphone|ipad|ipod/i.test(ua) && !window.MSStream
     if (iosDevice) { setIsIos(true); setShow(true); return }
 
-    // Ambil prompt yang mungkin sudah ditangkap sebelum React mount
     if (window.__pwaPrompt) {
       promptRef.current = window.__pwaPrompt
       setShow(true)
       return
     }
 
-    // Tunggu event dari main.jsx jika prompt belum fire lagi
     function onPromptReady() {
       if (window.__pwaPrompt && !sessionStorage.getItem(DISMISSED_KEY)) {
         promptRef.current = window.__pwaPrompt
@@ -39,59 +35,73 @@ export default function InstallPrompt() {
       }
     }
 
-    window.addEventListener('pwa-prompt-ready', onPromptReady)
-    window.addEventListener('appinstalled', () => {
-      setShow(false)
+    function onInstalled() {
+      dismiss()
       setInstalled(true)
       window.__pwaPrompt = null
-    })
+    }
 
-    return () => window.removeEventListener('pwa-prompt-ready', onPromptReady)
+    window.addEventListener('pwa-prompt-ready', onPromptReady)
+    window.addEventListener('appinstalled', onInstalled)
+    return () => {
+      window.removeEventListener('pwa-prompt-ready', onPromptReady)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
   }, [])
+
+  function dismiss() {
+    setExiting(true)
+    setTimeout(() => { setShow(false); setExiting(false) }, 300)
+    sessionStorage.setItem(DISMISSED_KEY, '1')
+  }
 
   async function handleInstall() {
     const prompt = promptRef.current
     if (!prompt) return
     prompt.prompt()
     const { outcome } = await prompt.userChoice
-    if (outcome === 'accepted') {
-      setShow(false)
-      window.__pwaPrompt = null
-    }
+    if (outcome === 'accepted') { dismiss(); window.__pwaPrompt = null }
     promptRef.current = null
-  }
-
-  function handleDismiss() {
-    sessionStorage.setItem(DISMISSED_KEY, '1')
-    setShow(false)
   }
 
   if (!show || installed) return null
 
   return (
-    <div className="install-banner">
-      <div className="install-banner-icon">
-        <DeviceMobile size={20} weight="fill" />
+    <div className={`install-card${exiting ? ' install-card--exit' : ''}`} role="banner">
+      <div className="install-card__glow" aria-hidden="true" />
+
+      <div className="install-card__icon">
+        <span style={{ fontSize: '22px', lineHeight: 1 }}>📚</span>
       </div>
-      <div className="install-banner-text">
-        <div className="install-banner-title">Pasang BukuTrack</div>
+
+      <div className="install-card__body">
+        <p className="install-card__title">Pasang BukuTrack</p>
         {isIos ? (
-          <div className="install-banner-sub">
-            Ketik <strong>⎙ Kongsi</strong> lalu <strong>Tambah ke Skrin Utama</strong>
+          <p className="install-card__sub">
+            Ketik{' '}
+            <span className="install-card__step">
+              <ShareNetwork size={9} weight="bold" /> Kongsi
+            </span>
+            {' '}→{' '}
+            <span className="install-card__step">Tambah ke Skrin Utama</span>
+          </p>
+        ) : (
+          <p className="install-card__sub">Akses pantas · boleh guna offline</p>
+        )}
+      </div>
+
+      <div className="install-card__actions">
+        {isIos ? (
+          <div className="install-card__ios-hint" aria-hidden="true">
+            <ArrowDown size={15} weight="bold" />
           </div>
         ) : (
-          <div className="install-banner-sub">
-            Pasang pada peranti untuk akses lebih pantas
-          </div>
-        )}
-      </div>
-      <div className="install-banner-actions">
-        {!isIos && (
-          <button className="btn btn-primary btn-sm" onClick={handleInstall}>
-            <DownloadSimple size={13} weight="bold" /> Pasang
+          <button className="install-card__cta" onClick={handleInstall}>
+            <DownloadSimple size={14} weight="bold" />
+            Pasang
           </button>
         )}
-        <button className="btn btn-ghost btn-sm" onClick={handleDismiss}>
+        <button className="install-card__dismiss" onClick={dismiss} aria-label="Tutup notifikasi pasang">
           <X size={13} weight="bold" />
         </button>
       </div>
