@@ -79,8 +79,36 @@ const AppInfoRow = ({ label, value, mono }) => (
   </div>
 )
 
+const APP_URL = 'https://bukutrack.vercel.app'
+const SHARE_TEXT = 'Cuba BukuTrack — aplikasi percuma untuk cikgu mengurus rekod buku teks murid dengan QR scan! 📚'
+
 export default function Donate() {
-  const [showQR, setShowQR] = useState(false)
+  const [showQR, setShowQR]       = useState(false)
+  const [toastMsg, setToastMsg]   = useState('')
+
+  function showToast(msg) {
+    setToastMsg(msg)
+    setTimeout(() => setToastMsg(''), 2500)
+  }
+
+  async function handleShare() {
+    // Cuba Web Share API (native share sheet — mobile)
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'BukuTrack', text: SHARE_TEXT, url: APP_URL })
+        return
+      } catch (e) {
+        if (e.name === 'AbortError') return // pengguna batal
+      }
+    }
+    // Fallback: salin ke clipboard (desktop)
+    try {
+      await navigator.clipboard.writeText(APP_URL)
+      showToast('✓ Pautan aplikasi telah disalin!')
+    } catch {
+      showToast('Sila salin: ' + APP_URL)
+    }
+  }
 
   return (
     <Layout title="Sokong Pembangun" breadcrumb="Maklumat · Sokongan">
@@ -113,7 +141,7 @@ export default function Donate() {
             onClick={() => setShowQR(true)} />
           <SupportCard icon="⭐" title="Kongsi BukuTrack" action="Kongsi"
             desc="Ceritakan BukuTrack kepada rakan-rakan guru. Setiap perkongsian memberi impak besar."
-            href="https://bukutrack.vercel.app" />
+            onClick={handleShare} />
           <SupportCard icon="🐛" title="Laporkan Bug / Cadangan" action="GitHub"
             desc="Jumpa masalah atau ada idea ciri baru? Buka isu di GitHub — kami baca setiap satu."
             href="https://github.com/oyendevlab/bukutrack/issues" />
@@ -134,6 +162,11 @@ export default function Donate() {
       </div>
 
       {showQR && <QRModal onClose={() => setShowQR(false)} />}
+
+      {/* Toast salin pautan */}
+      {toastMsg && (
+        <div className="share-toast">{toastMsg}</div>
+      )}
     </Layout>
   )
 }
