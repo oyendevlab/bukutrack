@@ -7,8 +7,9 @@ import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useAppContext } from '../context/AppContext.jsx'
-import { ArrowLeft, Camera, Trash, UserPlus, UploadSimple } from '@phosphor-icons/react'
+import { ArrowLeft, Camera, Trash, UserPlus, UploadSimple, FileXls } from '@phosphor-icons/react'
 import CsvImportModal from '../components/ui/CsvImportModal.jsx'
+import { exportClassMatrix } from '../utils/exportExcel.js'
 
 const EMPTY_STUDENT = { name: '', studentNo: '' }
 
@@ -173,9 +174,26 @@ export default function ClassDetail() {
       <div className="card" style={{ overflow: 'hidden' }}>
         <div className="card-header">
           <div className="card-title">Rekod Semakan</div>
-          <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '10px', color: 'var(--ink3)', fontFamily: 'var(--font-mono)', marginRight: 'auto' }}>
             {classSessions.length} sesi · {classStudents.length} murid
           </span>
+          {classSessions.length > 0 && classStudents.length > 0 && (
+            <button
+              className="btn btn-ghost btn-sm"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+              onClick={() => exportClassMatrix({
+                cls,
+                students: classStudents,
+                sessions: classSessions,
+                sessionRecords,
+                books: classBooks,
+              })}
+              title="Export ke Excel"
+            >
+              <FileXls size={14} weight="bold" />
+              Excel
+            </button>
+          )}
         </div>
 
         {classSessions.length === 0 ? (
