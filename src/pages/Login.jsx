@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { supabase } from '../lib/supabase'
+import BrandLogo from '../components/ui/BrandLogo.jsx'
 
 export default function Login() {
   const { signIn } = useAuth()
@@ -43,7 +44,7 @@ export default function Login() {
   return (
     <div className="login-screen">
       <div className="login-card">
-        <div className="login-mark">BUKU<span>TRACK</span></div>
+        <div style={{ marginBottom: '26px' }}><BrandLogo size="lg" /></div>
         <div className="login-heading">Log Masuk</div>
         <div className="login-sub">Portal Cikgu · Sistem Rekod Buku</div>
 

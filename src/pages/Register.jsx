@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth.jsx'
+import BrandLogo from '../components/ui/BrandLogo.jsx'
 
 export default function Register() {
   const { signUp } = useAuth()
@@ -35,7 +36,7 @@ export default function Register() {
   return (
     <div className="login-screen">
       <div className="login-card" style={{ maxWidth: '440px' }}>
-        <div className="login-mark">BUKU<span>TRACK</span></div>
+        <div style={{ marginBottom: '26px' }}><BrandLogo size="lg" /></div>
         <div className="login-heading">Daftar Akaun</div>
         <div className="login-sub">Portal Cikgu · Sistem Rekod Buku</div>
 

@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../hooks/useAuth.jsx'
+import BrandLogo from '../ui/BrandLogo.jsx'
 import {
   SquaresFour,
   QrCode,
@@ -55,12 +56,10 @@ export default function Sidebar({ open, collapsed = false, onClose, incompleteCo
 
         {/* Logo */}
         <div className="logo">
-          <div className="logo-mark">
-            {collapsed
-              ? <span className="logo-emoji">📚</span>
-              : <><span className="logo-emoji">📚</span> BUKU<span>TRACK</span></>
-            }
-          </div>
+          {collapsed
+            ? <span className="logo-emoji">📚</span>
+            : <BrandLogo size="md" />
+          }
         </div>
 
         <nav className="nav">
