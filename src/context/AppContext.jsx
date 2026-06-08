@@ -14,16 +14,18 @@ export function AppProvider({ children }) {
   const [sessionRecords, setSessionRecords] = useState([])
   const [loading, setLoading] = useState(true)
 
+  const userId = user?.id ?? null
+
   const fetchAll = useCallback(async () => {
-    if (!user) return
+    if (!userId) return
     setLoading(true)
     const [clsRes, stuRes, bkRes, sesRes, recRes] = await Promise.all([
-      supabase.from('classes').select('*').eq('teacher_id', user.id).order('created_at', { ascending: true }),
-      supabase.from('students').select('*').eq('teacher_id', user.id).order('name', { ascending: true }),
-      supabase.from('books').select('*').eq('teacher_id', user.id).order('created_at', { ascending: true }),
+      supabase.from('classes').select('*').eq('teacher_id', userId).order('created_at', { ascending: true }),
+      supabase.from('students').select('*').eq('teacher_id', userId).order('name', { ascending: true }),
+      supabase.from('books').select('*').eq('teacher_id', userId).order('created_at', { ascending: true }),
       supabase.from('check_sessions')
         .select('*, books(id,name,emoji), classes(id,subject,year_name)')
-        .eq('teacher_id', user.id)
+        .eq('teacher_id', userId)
         .order('checked_at', { ascending: false })
         .order('created_at', { ascending: false })
         .limit(100),
@@ -35,16 +37,16 @@ export function AppProvider({ children }) {
     setSessions(sesRes.data || [])
     setSessionRecords(recRes.data || [])
     setLoading(false)
-  }, [user])
+  }, [userId])
 
   useEffect(() => {
-    if (user) fetchAll()
+    if (userId) fetchAll()
     else {
       setClasses([]); setStudents([]); setBooks([])
       setSessions([]); setSessionRecords([])
       setLoading(false)
     }
-  }, [user, fetchAll])
+  }, [userId, fetchAll])
 
   // ===== CLASSES =====
   async function addClass(subject, yearName, color = 'blue') {

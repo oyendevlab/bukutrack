@@ -1,7 +1,25 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, Component } from 'react'
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx'
 import { AppProvider } from './context/AppContext.jsx'
+
+class ErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { error: null } }
+  static getDerivedStateFromError(error) { return { error } }
+  render() {
+    if (this.state.error) return (
+      <div className="loading-screen" style={{ flexDirection: 'column', gap: '12px' }}>
+        <span style={{ fontSize: '32px' }}>😕</span>
+        <p style={{ margin: 0, fontWeight: 600 }}>Sesuatu tidak kena</p>
+        <button
+          onClick={() => { this.setState({ error: null }); window.location.href = '/dashboard' }}
+          style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: 'var(--accent)', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: '13px' }}
+        >Kembali ke Papan Pemuka</button>
+      </div>
+    )
+    return this.props.children
+  }
+}
 
 const Landing = lazy(() => import('./pages/Landing.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
@@ -61,7 +79,9 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <AppProvider>
-          <AppRoutes />
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
         </AppProvider>
       </AuthProvider>
     </BrowserRouter>
