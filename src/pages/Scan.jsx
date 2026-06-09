@@ -6,7 +6,7 @@ import { useClasses } from '../hooks/useClasses.jsx'
 import { useStudents } from '../hooks/useStudents.jsx'
 import { useBooks } from '../hooks/useBooks.jsx'
 import { useAppContext } from '../context/AppContext.jsx'
-import { CheckCircle, ArrowLeft, Camera } from '@phosphor-icons/react'
+import { CheckCircle, ArrowLeft, Camera, UsersThree } from '@phosphor-icons/react'
 
 const STEP_SETUP = 'setup'
 const STEP_SCAN  = 'scan'
@@ -66,6 +66,23 @@ export default function Scan() {
     setRecentScans(prev => [{ name: student.name, time: new Date().toISOString() }, ...prev.slice(0, 9)])
     setTimeout(() => { setLastScan(null); setCameraActive(true) }, 1500)
   }, [activeSession, students, scannedIds, upsertSessionRecord])
+
+  async function handleMarkAllPresent() {
+    if (!activeSession) return
+    const unscanned = sessionStudents.filter(s => !scannedIds.has(s.id))
+    if (unscanned.length === 0) return
+    setSaving(true)
+    const now = new Date().toISOString()
+    for (const s of unscanned) {
+      await upsertSessionRecord(activeSession.id, s.id, 'present', null, now)
+    }
+    setScannedIds(new Set(sessionStudents.map(s => s.id)))
+    setRecentScans(prev => [
+      ...unscanned.map(s => ({ name: s.name, time: now })),
+      ...prev,
+    ].slice(0, 10))
+    setSaving(false)
+  }
 
   async function handleFinish() {
     setSaving(true)
@@ -174,10 +191,24 @@ export default function Scan() {
               )}
 
               <div className="rule" />
+
+              {/* Tandakan Semua Hadir */}
+              {scannedIds.size < sessionStudents.length && (
+                <button
+                  className="btn btn-ghost"
+                  style={{ width: '100%', justifyContent: 'center', marginBottom: '8px', color: 'var(--green)', borderColor: 'var(--green)', gap: '6px' }}
+                  onClick={handleMarkAllPresent}
+                  disabled={saving}
+                >
+                  <UsersThree size={15} weight="bold" />
+                  Tandakan Semua Hadir ({sessionStudents.length - scannedIds.size} murid)
+                </button>
+              )}
+
               <button className="btn btn-primary"
                 style={{ width: '100%', justifyContent: 'center' }}
                 onClick={handleFinish} disabled={saving}>
-                {saving ? 'Menyimpan...' : `Selesai — ${sessionStudents.length - scannedIds.size} belum imbas`}
+                {saving ? 'Menyimpan...' : scannedIds.size === sessionStudents.length ? 'Selesai ✓' : `Selesai — ${sessionStudents.length - scannedIds.size} belum imbas`}
               </button>
               <button className="btn btn-ghost"
                 style={{ width: '100%', justifyContent: 'center', marginTop: '6px' }}
